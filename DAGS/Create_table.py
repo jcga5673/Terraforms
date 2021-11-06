@@ -23,6 +23,6 @@ with DAG(**dag_params) as dag:
             country varchar(20))
             ''',
         postgres_conn_id= 'conn_postgress',
-        autocommit=True
+        autocommit=True,
     )
     
