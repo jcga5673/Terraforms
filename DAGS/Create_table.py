@@ -22,5 +22,7 @@ with DAG(**dag_params) as dag:
             customer_id int,
             country varchar(20))
             ''',
+        postgres_conn_id= 'conn_postgress',
+        autocommit=True
     )
     
