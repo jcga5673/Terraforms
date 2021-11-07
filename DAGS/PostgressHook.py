@@ -13,7 +13,7 @@ from psycopg2.extras import execute_values
 default_args = {
     'owner': 'José Gallardo',
     'depends_on_past': False,
-    'start_date': datetime(2021, 10, 1),
+    'start_date': datetime(2021, 1, 1),
     'email': ['jcga5673@gmail.com'],
     'email_on_failure': False,
     'email_on_retry': False,

@@ -4,7 +4,7 @@ from airflow.operators.postgres_operator import PostgresOperator
 
 dag_params = {
     'dag_id': 'PostgresOperator_dag',
-    'start_date': datetime(2021, 10, 29),
+    'start_date': datetime(2021, 1, 29),
     'schedule_interval': None
 }
 
