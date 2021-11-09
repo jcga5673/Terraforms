@@ -7,6 +7,7 @@ from airflow.hooks.postgres_hook import PostgresHook
 from datetime import timedelta
 from datetime import datetime
 from psycopg2.extras import execute_values
+import pandas as pd
 
 #default arguments
 
@@ -26,28 +27,33 @@ dag = DAG('insert_data_postgres',
           schedule_interval='@once',
           catchup=False)
 
+def csv_to_postgres(url):
+    #Open Postgres Connection
+    pg_hook = PostgresHook(postgres_conn_id='conn_postgress')
+    get_postgres_conn = PostgresHook(postgres_conn_id='conn_postgress').get_conn()
+    curr = get_postgres_conn.cursor("cursor")
+    # CSV loading to table.
+
+    # Getting the current work directory (cwd)
+    path = 'https://drive.google.com/uc?export=download&id='+url.split('/')[-2]
+    df = pd.read_csv(path)
+    print(df.head(5))
+    df.to_parquet('data_frame.csv')
+    for i, row in df.iterrows():
+        try:
+            curr.execute("INSERT INTO user_purchase (invoice_number,stock_code, detail,quantity,invoice_date,unit_price,customer_id,country) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)",(row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7]))
+        except Exception as err:
+            print(err,'solve this bro')
+        if i == 50:
+            break
+    return 'here is postgress: ' + data
 
 
 
-task1 = PostgresOperator(task_id = 'create_table',
-                        sql="""
-                        CREATE TABLE IF NOT EXISTS pokemon (
-                            Number INTEGER,   
-                            Name VARCHAR(255),
-                            Type_1 VARCHAR(255),
-                            Type_2 VARCHAR(255),
-                            Total INTEGER,
-                            HP INTEGER,
-                            Attack INTEGER,
-                            Defense INTEGER,
-                            Sp_Atk INTEGER,
-                            Sp_Def INTEGER,
-                            Speed INTEGER,
-                            Generation INTEGER,
-                            Legendary VARCHAR(255));
-                            """,
-                            postgres_conn_id= 'conn_postgress',
-                            autocommit=True,
-                            dag = dag)
+task1 = PythonOperator(task_id='csv_to_s3',
+                        provide_context = True,
+                        python_callable = csv_to_postgres,
+                        op_kwargs={"url":"https://drive.google.com/file/d/1ysfUdLi7J8gW6GDA3cOAbr7Zc4ZLhxxD/view?usp=sharing"},
+                        dag = dag)
 
 task1
