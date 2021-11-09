@@ -84,8 +84,7 @@ def csv_to_postgres(url):
             print(i)
         except Exception as err:
             print(err,'solve this bro')
-        if i == 50:
-            break
+            
     return 'here is postgress: '
 
 
