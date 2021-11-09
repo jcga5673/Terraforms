@@ -8,6 +8,7 @@ from datetime import timedelta
 from datetime import datetime
 from psycopg2.extras import execute_values
 import pandas as pd
+import psycopg2 as pg
 
 #default arguments
 
@@ -63,10 +64,10 @@ def csv_to_postgres(url):
 def csv_to_postgres(url):
     try:
         conection = pg.connect(
-            host = "postgres",
-            user = "airflow",
-            password = "airflow",
-            database = "airflow"
+            host = "terraform-2021110904372505540000000d.ctn9taanzupc.us-east-2.rds.amazonaws.com",
+            user = "dbuser",
+            password = "dbpassword",
+            database = "dbname"
         )
         print('Conexión exitosa')
     except Exception as err:
