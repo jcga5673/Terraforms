@@ -76,7 +76,7 @@ def csv_to_postgres(url):
     url = "https://drive.google.com/file/d/1ysfUdLi7J8gW6GDA3cOAbr7Zc4ZLhxxD/view?usp=sharing"
     path = 'https://drive.google.com/uc?export=download&id='+url.split('/')[-2]
     df = pd.read_csv(path)
-    #engine = sqlalchemy.create_engine('postgresql://airflow:airflow@localhost:/postgres')
+
     cur = conection.cursor()
     for i, row in df.iterrows():
         try:
@@ -84,7 +84,7 @@ def csv_to_postgres(url):
             print(i)
         except Exception as err:
             print(err,'solve this bro')
-            
+
     return 'here is postgress: '
 
 

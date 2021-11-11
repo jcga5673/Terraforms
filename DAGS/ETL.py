@@ -7,6 +7,7 @@ from airflow.utils.dates import days_ago
 import pandas as pd
 import psycopg2 as pg
 import sqlalchemy
+import boto3
 
 
 default_args = {
@@ -38,20 +39,36 @@ default_args = {
 def my_function(x):
     return x + " is a must have tool for Data Engineers."
 
-def read_csv(url):
+def read_csv(url,bucket):
+    ##Download data and send it to s3
     path = 'https://drive.google.com/uc?export=download&id='+url.split('/')[-2]
     df = pd.read_csv(path)
+    bucket_path_raw = bucket + 'raw_data.csv'
     print(df.head(5))
-    df.to_parquet('data_frame.csv')
-    return "csv saved into data-frame.parquet"
+    #s3 = boto3.client('s3',aws_access_key_id = '',aws_secret_access_key='')
+    #bucket = 'data_bootcamp'
+    #bucket = 's3://'
+    df.to_parquet(bucket_path_raw)
+    return f"csv saved in parquet file in: {bucket_path_raw}"
+
+def clear_data(bucket):
+    ##read data from s3 and clean it
+    bucket_path_raw = bucket + 'raw_data.csv'
+    bucket_path_stage = bucket + 'stage_data.csv'
+    df = pd.read_parquet(bucket_path_raw)
+    for column in df.columns:
+        df[column] = df[column].str.replace(r'\W',"")
+    df.to_parquet(bucket_path_stage)
+    return f"parquet saved into {bucket_path_stage}"
+        
 
 def send_data(data):
     try:
         conection = pg.connect(
-            host = "postgres",
-            user = "airflow",
-            password = "airflow",
-            database = "airflow"
+            host = "terraform-2021110904372505540000000d.ctn9taanzupc.us-east-2.rds.amazonaws.com",
+            user = "dbuser",
+            password = "dbpassword",
+            database = "dbname"
         )
         print('Conexión exitosa')
     except Exception as err:
@@ -60,16 +77,16 @@ def send_data(data):
     url = "https://drive.google.com/file/d/1ysfUdLi7J8gW6GDA3cOAbr7Zc4ZLhxxD/view?usp=sharing"
     path = 'https://drive.google.com/uc?export=download&id='+url.split('/')[-2]
     df = pd.read_csv(path)
-    #engine = sqlalchemy.create_engine('postgresql://airflow:airflow@localhost:/postgres')
+
     cur = conection.cursor()
     for i, row in df.iterrows():
         try:
             cur.execute("INSERT INTO user_purchase (invoice_number,stock_code, detail,quantity,invoice_date,unit_price,customer_id,country) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)",(row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7]))
+            print(i)
         except Exception as err:
             print(err,'solve this bro')
-        if i == 50:
-            break
-    return 'here is postgress: ' + data
+
+    return 'here is postgress: '
 
 
 
@@ -94,11 +111,18 @@ t2 = PythonOperator(
 t1 = PythonOperator(
     task_id = 'read_csv',
     python_callable = read_csv,
-    op_kwargs={"url":"https://drive.google.com/file/d/1ysfUdLi7J8gW6GDA3cOAbr7Zc4ZLhxxD/view?usp=sharing"},
+    op_kwargs={"url":"https://drive.google.com/file/d/1ysfUdLi7J8gW6GDA3cOAbr7Zc4ZLhxxD/view?usp=sharing","bucket":"s3://data-bootcamp-jose/"},
     dag = dag,
 )
 
 t2 = PythonOperator(
+    task_id='clear_data',
+    python_callable= clear_data,
+    op_kwargs = {"bucket":"s3://data-bootcamp-jose/"},
+    dag=dag,
+)
+
+t3 = PythonOperator(
     task_id = 'send_to_postgres',
     python_callable = send_data,
     op_kwargs={"data":'data_frame.parquet'},
@@ -106,13 +130,12 @@ t2 = PythonOperator(
 )
 
 
-t3 = PostgresOperator(
+t4 = PostgresOperator(
     task_id ='Query_the_table',
     sql="SELECT * FROM user_purchase LIMIT 25",
     dag = dag,
 )
 
 
-t1 >> t2 >> t3
+t1 >> t2 
 
-#t1 >> t2
