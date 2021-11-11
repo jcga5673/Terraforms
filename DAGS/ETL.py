@@ -37,6 +37,13 @@ default_args = {
 }
 
 
+#s3 = boto3.client('s3')
+session = boto3.Session(
+aws_access_key_id='AKIAQDBVV25AEUQVLYH2',
+aws_secret_access_key='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'
+)
+s3 = session.resource('s3')
+
 # define the python function
 def my_function(x):
     return x + " is a must have tool for Data Engineers."
@@ -47,6 +54,7 @@ def read_csv(url,bucket):
     df = pd.read_csv(path)
     bucket_path_raw = bucket + 'raw_data.csv'
     print(df.head(5))
+    print(bucket_path_raw)
     #s3 = boto3.client('s3',aws_access_key_id = '',aws_secret_access_key='')
     #bucket = 'data_bootcamp'
     #bucket = 's3://'
