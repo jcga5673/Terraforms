@@ -3,7 +3,9 @@ from datetime import timedelta
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
 from airflow.operators.postgres_operator import PostgresOperator
+from airflow.providers.amazon.aws.sensors.s3_key import S3KeySensor
 from airflow.utils.dates import days_ago
+from datetime import datetime, timedelta
 import pandas as pd
 import psycopg2 as pg
 import sqlalchemy
@@ -99,14 +101,19 @@ dag = DAG(
 )
 
 # define the first task
-'''
-t2 = PythonOperator(
-    task_id='print',
-    python_callable= my_function,
-    op_kwargs = {"x" : "Apache Airflow"},
-    dag=dag,
-)
-'''
+
+
+
+sensor = S3KeySensor(
+    task_id="check_s3",
+    bucket_key="",
+    wildcard_match=True,
+    bucket_name='data-bootcamp-jose',
+    aws_conn_id="conn_S3",
+    timeout=18 * 60 * 60,
+    poke_interval=120,
+    dag=dag)
+
 
 t1 = PythonOperator(
     task_id = 'read_csv',
@@ -137,5 +144,5 @@ t4 = PostgresOperator(
 )
 
 
-t1 >> t2 
+sensor >> t1 >> t2 
 
