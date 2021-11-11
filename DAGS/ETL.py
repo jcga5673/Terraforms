@@ -104,16 +104,6 @@ dag = DAG(
 
 
 
-sensor = S3KeySensor(
-    task_id="check_s3",
-    bucket_key="",
-    wildcard_match=True,
-    bucket_name='data-bootcamp-jose',
-    aws_conn_id="conn_S3",
-    timeout=18 * 60 * 60,
-    poke_interval=120,
-    dag=dag)
-
 
 t1 = PythonOperator(
     task_id = 'read_csv',
@@ -128,7 +118,7 @@ t2 = PythonOperator(
     op_kwargs = {"bucket":"s3://data-bootcamp-jose/"},
     dag=dag,
 )
-
+'''
 t3 = PythonOperator(
     task_id = 'send_to_postgres',
     python_callable = send_data,
@@ -142,7 +132,7 @@ t4 = PostgresOperator(
     sql="SELECT * FROM user_purchase LIMIT 25",
     dag = dag,
 )
+'''
 
-
-sensor >> t1 >> t2 
+t1 >> t2 
 
