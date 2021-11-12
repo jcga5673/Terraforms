@@ -52,7 +52,7 @@ def read_csv(url,bucket):
     bucket_path_raw = bucket + 'raw_data.csv'
     print(df.head(5))
     print(bucket_path_raw)
-    hook = S3Hook(aws_conn_id='conn_id')#.get_bucket('bucket')
+    hook = S3Hook(aws_conn_id='conn_id').get_bucket('data-bootcamp-jose')
 
 
     #s3 = boto3.client('s3',aws_access_key_id = '',aws_secret_access_key='')
