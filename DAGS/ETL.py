@@ -12,7 +12,7 @@ import psycopg2 as pg
 import sqlalchemy
 import boto3
 import fsspec
-
+import s3fs
 
 default_args = {
     'owner': 'José',
