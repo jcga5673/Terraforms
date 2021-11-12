@@ -4,12 +4,14 @@ from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
 from airflow.operators.postgres_operator import PostgresOperator
 from airflow.providers.amazon.aws.sensors.s3_key import S3KeySensor
+from airflow.hooks.S3_hook import S3Hook
 from airflow.utils.dates import days_ago
 from datetime import datetime, timedelta
 import pandas as pd
 import psycopg2 as pg
 import sqlalchemy
 import boto3
+import fsspec
 
 
 default_args = {
@@ -50,6 +52,9 @@ def read_csv(url,bucket):
     bucket_path_raw = bucket + 'raw_data.csv'
     print(df.head(5))
     print(bucket_path_raw)
+    hook = S3Hook(aws_conn_id='conn_id').get_bucket('bucket')
+
+
     #s3 = boto3.client('s3',aws_access_key_id = '',aws_secret_access_key='')
     #bucket = 'data_bootcamp'
     #bucket = 's3://'
