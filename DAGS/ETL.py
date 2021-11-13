@@ -72,6 +72,8 @@ def clear_data(bucket):
     bucket_path_raw = bucket + 'raw_data.csv'
     bucket_path_stage = bucket + 'stage_data.csv'
     df = pd.read_parquet('raw.parquet')
+    for column in df.columns:
+        print(type(df[column]))
     print(df.columns)
     for i,column in enumerate(df.columns):
         print(i)
