@@ -75,7 +75,7 @@ def clear_data(bucket):
     print(df.columns)
 
     for i,column in enumerate(df.columns):
-        df[column].astype(str)
+        df[column] = df[column].astype(str)
         print(i,df[column])
         df[column] = df[column].str.replace(r'\W',"")
       
