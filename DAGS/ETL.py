@@ -74,11 +74,11 @@ def clear_data(bucket):
     df = pd.read_parquet('raw.parquet')
     print(df.columns)
     print('quantity')
-    df['quantity'] = df[column].str.replace(r'\W',"")
+    df['quantity'] = df['quantity'].str.replace(r'\W',"")
     print('unit_price')
-    df['unit_price'] = df[column].str.replace(r'\W',"")
+    df['unit_price'] = df['unit_price'].str.replace(r'\W',"")
     print('costumer_id')
-    df['customer_id'] = df[column].str.replace(r'\W',"")
+    df['customer_id'] = df['customer_id'].str.replace(r'\W',"")
     '''
     for i,column in enumerate(df.columns):
         print(i,df[column])
