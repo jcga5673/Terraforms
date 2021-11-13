@@ -86,7 +86,7 @@ def clear_data(bucket):
 def send_data(data):
     try:
         conection = pg.connect(
-            host = "terraform-2021110904372505540000000d.ctn9taanzupc.us-east-2.rds.amazonaws.com",
+            host = "terraform-2021111310095621580000000d.ctn9taanzupc.us-east-2.rds.amazonaws.com",
             user = "dbuser",
             password = "dbpassword",
             database = "dbname"
@@ -137,7 +137,7 @@ t2 = PythonOperator(
     op_kwargs = {"bucket":"s3://data-bootcamp-jose/"},
     dag=dag,
 )
-'''
+
 t3 = PythonOperator(
     task_id = 'send_to_postgres',
     python_callable = send_data,
@@ -145,7 +145,7 @@ t3 = PythonOperator(
     dag = dag,
 )
 
-
+'''
 t4 = PostgresOperator(
     task_id ='Query_the_table',
     sql="SELECT * FROM user_purchase LIMIT 25",
@@ -153,5 +153,5 @@ t4 = PostgresOperator(
 )
 '''
 
-t1 >> t2 
+t1 >> t2 >> t3
 
