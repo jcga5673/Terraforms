@@ -72,7 +72,9 @@ def clear_data(bucket):
     bucket_path_raw = bucket + 'raw_data.csv'
     bucket_path_stage = bucket + 'stage_data.csv'
     df = pd.read_parquet('raw.parquet')
-    for column in df.columns:
+    print(df.columns)
+    for i,column in df.columns:
+        print(i)
         df[column] = df[column].str.replace(r'\W',"")
     df.to_parquet('stagin.parquet')
     return f"parquet saved into {bucket_path_stage}"
