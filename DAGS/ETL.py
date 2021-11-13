@@ -54,7 +54,7 @@ def read_csv(url,bucket):
     bucket_path_raw = bucket + 'raw_data.csv'
     print(df.head(5))
     print(bucket_path_raw)
-    #hook = S3Hook(aws_conn_id='conn_id').get_bucket('data-bootcamp-jose')
+    hook = S3Hook(aws_conn_id='conn_id').get_bucket('data-bootcamp-jose')
     #hook.load_file( ,)
 
     #s3_resource = self.get_resource_type('s3')
@@ -70,10 +70,10 @@ def clear_data(bucket):
     ##read data from s3 and clean it
     bucket_path_raw = bucket + 'raw_data.csv'
     bucket_path_stage = bucket + 'stage_data.csv'
-    df = pd.read_parquet(bucket_path_raw)
+    df = pd.read_parquet('raw.parquet')
     for column in df.columns:
         df[column] = df[column].str.replace(r'\W',"")
-    df.to_parquet(bucket_path_stage)
+    df.to_parquet('stagin.parquet')
     return f"parquet saved into {bucket_path_stage}"
         
 
