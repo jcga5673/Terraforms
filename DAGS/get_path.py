@@ -30,6 +30,11 @@ def path_local():
 
     # Print the current working directory
     print("Current working directory: {0}".format(cwd))
+
+    files = os.listdir(cwd)
+
+    for f in files:
+        print(f)
     return  "work there pliz"
 
 
