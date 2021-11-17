@@ -8,8 +8,8 @@ from airflow.utils.dates import days_ago
 from datetime import datetime, timedelta
 import os
 import pandas as pd
+from airflow.operators.bash_operator import BashOperator
 
-'''
 
 default_args = {
     'owner': 'José',
@@ -37,7 +37,7 @@ def path_local():
     print('hi')
     for f in files:
         print(f)
-
+    print('test this bro')
     #df = pd.read_csv('/opt/airflow/dags/movie_review.csv')
     #print(df.head)
     return  "work there pliz"
@@ -80,7 +80,6 @@ def command():
 
     print("$AIRFLOW_HOME=", AIRFLOW_HOME)
     files = os.listdir('/opt/airflow/dags')
-    print('hi')
     for f in files:
         print(f)
 
@@ -91,4 +90,4 @@ with dag:
         python_callable=command,
         provide_context=True
     )
-
+'''
