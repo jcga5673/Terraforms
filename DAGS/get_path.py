@@ -31,7 +31,7 @@ def path_local():
     # Print the current working directory
     print("Current working directory: {0}".format(cwd))
 
-    files = os.listdir(cwd)
+    files = os.listdir('/opt/airflow/dags')
 
     for f in files:
         print(f)
