@@ -37,8 +37,8 @@ def path_local():
     for f in files:
         print(f)
 
-    df = pd.read_csv('/opt/airflow/dags/movie_review.csv')
-    print(df.head)
+    #df = pd.read_csv('/opt/airflow/dags/movie_review.csv')
+    #print(df.head)
     return  "work there pliz"
 
 
