@@ -4,6 +4,8 @@ from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
 from airflow.operators.postgres_operator import PostgresOperator
 from airflow.providers.amazon.aws.sensors.s3_key import S3KeySensor
+from airflow.utils.dates import days_ago
+from datetime import datetime, timedelta
 import os
 
 
