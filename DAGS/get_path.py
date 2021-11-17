@@ -79,7 +79,7 @@ dag = DAG(
 def command():
 
     print("$AIRFLOW_HOME=", AIRFLOW_HOME)
-    files = os.listdir('AIRFLOW_HOME')
+    files = os.listdir('/opt/airflow')
     print('hi')
     for f in files:
         print(f)
