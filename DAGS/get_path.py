@@ -38,6 +38,7 @@ def path_local():
         print(f)
 
     df = pd.read_csv('/opt/airflow/dags/movie_review.csv')
+    print(df.head)
     return  "work there pliz"
 
 
