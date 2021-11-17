@@ -33,7 +33,7 @@ def path_local():
     print("Current working directory: {0}".format(cwd))
 
     files = os.listdir('/opt/airflow/dags')
-
+    print('hi')
     for f in files:
         print(f)
 
