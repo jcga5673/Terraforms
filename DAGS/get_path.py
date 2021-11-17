@@ -7,6 +7,7 @@ from airflow.providers.amazon.aws.sensors.s3_key import S3KeySensor
 from airflow.utils.dates import days_ago
 from datetime import datetime, timedelta
 import os
+import pandas as pd
 
 
 default_args = {
@@ -35,6 +36,8 @@ def path_local():
 
     for f in files:
         print(f)
+
+    df = pd.read_csv('/opt/airflow/dags/movie_review.csv')
     return  "work there pliz"
 
 
