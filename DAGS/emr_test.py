@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.operators.dummy_operator import DummyOperator
 from airflow.hooks.S3_hook import S3Hook
-from airflow.operators import PythonOperator
+from airflow.operators.python_operator import PythonOperator
 from airflow.contrib.operators.emr_create_job_flow_operator import (
     EmrCreateJobFlowOperator,
 )
