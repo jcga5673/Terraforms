@@ -56,7 +56,7 @@ def read_csv(url,bucket):
     print(bucket_path_raw)
     hook = S3Hook(aws_conn_id='conn_id').get_bucket('data-bootcamp-jose')
     #hook.load_file( ,)
-
+    client = boto3.client('s3') 
     #s3_resource = self.get_resource_type('s3')
 
     #s3 = boto3.client('s3',aws_access_key_id = '',aws_secret_access_key='')
@@ -65,7 +65,8 @@ def read_csv(url,bucket):
     #df.to_parquet(bucket_path_raw)
     df.to_parquet('raw.parquet')
     #df.to_parquet(bucket_path_raw)
-    hook.load_file('raw.parquet','/raw.parquet','data-bootcamp.jose')
+    client.put_object('raw.parquet','data-bootcamp-jose','raw.parquet')
+    #hook.load_file('raw.parquet','/raw.parquet','data-bootcamp.jose')
     return f"csv saved in parquet file in: {bucket_path_raw}"
 
 def clear_data(bucket):
