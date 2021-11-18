@@ -65,8 +65,9 @@ def read_csv(url,bucket):
     #s3 = boto3.client('s3',aws_access_key_id = '',aws_secret_access_key='')
     #bucket = 'data_bootcamp'
     #bucket = 's3://'
+    print('error')
     df.to_parquet(bucket_path_raw)
-    
+    print('here')
     #df.to_parquet(bucket_path_raw)   #No module named s3fs
     #client.put_object('raw.parquet','data-bootcamp-jose','raw.parquet')
     #hook.load_file('raw.parquet','/raw.parquet','data-bootcamp.jose')
