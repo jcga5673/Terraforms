@@ -55,16 +55,18 @@ def read_csv(url,bucket):
     print(df.head(5))
     print(bucket_path_raw)
     hook = S3Hook(aws_conn_id='conn_id').get_bucket('data-bootcamp-jose')
+    df.to_parquet('raw.parquet')
     #hook.load_file( ,)
-    client = boto3.client('s3') 
+    #client = boto3.client('s3') 
     #s3_resource = self.get_resource_type('s3')
-
+    s3 = boto3.resource('s3')
+    s3.meta.client.upload_file('raw.parquet', 'data-bootcamp-jose', 'raw.parquet')
     #s3 = boto3.client('s3',aws_access_key_id = '',aws_secret_access_key='')
     #bucket = 'data_bootcamp'
     #bucket = 's3://'
     #df.to_parquet(bucket_path_raw)
-    df.to_parquet('raw.parquet')
-    df.to_parquet(bucket_path_raw)
+    
+    #df.to_parquet(bucket_path_raw)   #No module named s3fs
     #client.put_object('raw.parquet','data-bootcamp-jose','raw.parquet')
     #hook.load_file('raw.parquet','/raw.parquet','data-bootcamp.jose')
     return f"csv saved in parquet file in: {bucket_path_raw}"
