@@ -64,6 +64,7 @@ def read_csv(url,bucket):
     #bucket = 's3://'
     #df.to_parquet(bucket_path_raw)
     df.to_parquet('raw.parquet')
+    df.to_parquet(bucket_path_raw)
     #hook.load_file('raw.parquet','raw.parquet','data-bootcamp.jose')
     return f"csv saved in parquet file in: {bucket_path_raw}"
 
