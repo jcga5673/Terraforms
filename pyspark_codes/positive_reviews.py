@@ -1,18 +1,17 @@
 import pyspark
 from pyspark.sql import SparkSession
 import pyspark.sql.functions as f
-from pyspark.ml.feature import StopWordsRemover, Tokenizer, RegexTokenizer
-from pyspark.sql.functions import concat_ws,expr,col,array_contains
+from pyspark.ml.feature import StopWordsRemover, Tokenizer
+from pyspark.sql.functions import expr,array_contains
 
 
 spark = SparkSession.builder.appName('Third-example').getOrCreate()
 #df = spark.read.csv('movie_review.csv',header=True)
-df = spark.read.csv('"s3://data-bootcamp-jose/movie_review.csv',header=True)
+df = spark.read.csv('s3://data-bootcamp-jose/movie_review.csv',header=True)
 ###Tokenizer
 tokenizer = Tokenizer(outputCol="words_old")
 tokenizer.setInputCol("review_str")
 df = tokenizer.transform(df)
-#df1.show(1)
 ### Stop remover
 remover = StopWordsRemover()
 remover.setInputCol("words_old")

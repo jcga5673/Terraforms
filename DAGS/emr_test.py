@@ -20,6 +20,7 @@ s3_data = "movie_review.csv"
 local_script = "./dags/scripts/spark/random_text_classification.py"
 s3_script = "positive_reviews.py"
 s3_clean = "clean_data/"
+'''
 SPARK_STEPS = [
     {
         "Name": "Move raw data from S3 to HDFS",
@@ -59,6 +60,23 @@ SPARK_STEPS = [
         },
     },
 ]
+'''
+SPARK_STEPS = [    
+    {
+        "Name": "Classify movie reviews",
+        "ActionOnFailure": "CANCEL_AND_WAIT",
+        "HadoopJarStep": {
+            "Jar": "command-runner.jar",
+            "Args": [
+                "spark-submit",
+                "--deploy-mode",
+                "client",
+                "s3://{{ params.BUCKET_NAME }}/{{ params.s3_script }}",
+            ],
+        },
+    }
+]    
+
 
 JOB_FLOW_OVERRIDES = {
     "Name": "Movie review classifier",
