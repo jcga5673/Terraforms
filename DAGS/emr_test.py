@@ -162,6 +162,7 @@ step_adder = EmrAddStepsOperator(
         "s3_script": s3_script,
         "s3_clean": s3_clean,
     },
+    region_name = "us-east-2",
     dag=dag,
 )
 
@@ -174,6 +175,7 @@ step_checker = EmrStepSensor(
     + str(last_step)
     + "] }}",
     aws_conn_id="aws_default",
+    region_name = "us-east-2",
     dag=dag,
 )
 
@@ -182,6 +184,7 @@ terminate_emr_cluster = EmrTerminateJobFlowOperator(
     task_id="terminate_emr_cluster",
     job_flow_id="{{ task_instance.xcom_pull(task_ids='create_emr_cluster', key='return_value') }}",
     aws_conn_id="aws_default",
+    region_name = "us-east-2",
     dag=dag,
 )
 
