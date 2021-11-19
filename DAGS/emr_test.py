@@ -162,7 +162,6 @@ step_adder = EmrAddStepsOperator(
         "s3_script": s3_script,
         "s3_clean": s3_clean,
     },
-    region_name = "us-east-2",
     dag=dag,
 )
 
@@ -175,7 +174,6 @@ step_checker = EmrStepSensor(
     + str(last_step)
     + "] }}",
     aws_conn_id="aws_default",
-    region_name = "us-east-2",
     dag=dag,
 )
 
