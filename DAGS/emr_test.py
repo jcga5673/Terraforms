@@ -20,47 +20,7 @@ s3_data = "movie_review.csv"
 local_script = "./dags/scripts/spark/random_text_classification.py"
 s3_script = "positive_reviews.py"
 s3_clean = "clean_data/"
-'''
-SPARK_STEPS = [
-    {
-        "Name": "Move raw data from S3 to HDFS",
-        "ActionOnFailure": "CANCEL_AND_WAIT",
-        "HadoopJarStep": {
-            "Jar": "command-runner.jar",
-            "Args": [
-                "s3-dist-cp",
-                "--src=s3://{{ params.BUCKET_NAME }}",
-                "--dest=/movie",
-            ],
-        },
-    },
-    {
-        "Name": "Classify movie reviews",
-        "ActionOnFailure": "CANCEL_AND_WAIT",
-        "HadoopJarStep": {
-            "Jar": "command-runner.jar",
-            "Args": [
-                "spark-submit",
-                "--deploy-mode",
-                "client",
-                "s3://{{ params.BUCKET_NAME }}/{{ params.s3_script }}",
-            ],
-        },
-    },
-    {
-        "Name": "Move clean data from HDFS to S3",
-        "ActionOnFailure": "CANCEL_AND_WAIT",
-        "HadoopJarStep": {
-            "Jar": "command-runner.jar",
-            "Args": [
-                "s3-dist-cp",
-                "--src=/output",
-                "--dest=s3://{{ params.BUCKET_NAME }}/{{ params.s3_clean }}",
-            ],
-        },
-    },
-]
-'''
+
 SPARK_STEPS = [    
     {
         "Name": "Classify movie reviews",
@@ -143,21 +103,7 @@ dag = DAG(
 )
 
 start_data_pipeline = DummyOperator(task_id="start_data_pipeline", dag=dag)
-'''
-data_to_s3 = PythonOperator(
-    dag=dag,
-    task_id="data_to_s3",
-    python_callable=_local_to_s3,
-    op_kwargs={"filename": local_data, "key": s3_data,},
-)
 
-script_to_s3 = PythonOperator(
-    dag=dag,
-    task_id="script_to_s3",
-    python_callable=_local_to_s3,
-    op_kwargs={"filename": local_script, "key": s3_script,},
-)
-'''
 # Create an EMR cluster
 create_emr_cluster = EmrCreateJobFlowOperator(
     task_id="create_emr_cluster",
@@ -205,7 +151,7 @@ terminate_emr_cluster = EmrTerminateJobFlowOperator(
 
 end_data_pipeline = DummyOperator(task_id="end_data_pipeline", dag=dag)
 
-#start_data_pipeline >> [data_to_s3, script_to_s3] >> create_emr_cluster
+
 start_data_pipeline >>  create_emr_cluster
 create_emr_cluster >> step_adder >> step_checker >> terminate_emr_cluster
 terminate_emr_cluster >> end_data_pipeline

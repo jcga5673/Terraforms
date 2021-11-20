@@ -23,4 +23,7 @@ df_sol = df.withColumn('positive', array_contains(df.words, 'good'))
 df_sol = df_sol.withColumn("positive_review", expr("CASE WHEN positive = 'true' THEN 1 " +
                "ELSE 0 END"))
 df_sol = df_sol.drop('review_str','words','positive')
-df_sol.show()
+df_sol.write.parquet('s3://data-bootcamp-jose/movie_review.parquet',mode="overwrite")
+df_sol.write.format('csv').option('header','true').save('s3a://data-bootcamp-jose/result.csv',mode='overwrite')
+#df_sol.write.csv('s3://data-bootcamp-jose/result.csv')
+#df_sol.show()

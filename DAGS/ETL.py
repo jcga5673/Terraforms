@@ -86,7 +86,7 @@ def clear_data(bucket):
 def send_data(data):
     try:
         conection = pg.connect(
-            host = "terraform-2021111310095621580000000d.ctn9taanzupc.us-east-2.rds.amazonaws.com",
+            host = "terraform-2021112018360077700000000d.ctn9taanzupc.us-east-2.rds.amazonaws.com",
             user = "dbuser",
             password = "dbpassword",
             database = "dbname"
