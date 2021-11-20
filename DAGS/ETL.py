@@ -25,19 +25,6 @@ default_args = {
     'email_on_retry': False,
     'retries': 1,
     'retry_delay': timedelta(minutes=5),
-    # 'queue': 'bash_queue',
-    # 'pool': 'backfill',
-    # 'priority_weight': 10,
-    # 'end_date': datetime(2016, 1, 1),
-    # 'wait_for_downstream': False,
-    # 'dag': dag,
-    # 'sla': timedelta(hours=2),
-    # 'execution_timeout': timedelta(seconds=300),
-    # 'on_failure_callback': some_function,
-    # 'on_success_callback': some_other_function,
-    # 'on_retry_callback': another_function,
-    # 'sla_miss_callback': yet_another_function,
-    # 'trigger_rule': 'all_success'
 }
 
 
@@ -60,7 +47,7 @@ def read_csv(url,bucket):
     #client = boto3.client('s3') 
     #s3_resource = self.get_resource_type('s3')
     s3 = boto3.resource('s3')
-    #s3.meta.client.upload_file('raw.parquet', 'data-bootcamp-jose', 'raw.parquet') ##acces denied
+    s3.meta.client.upload_file('raw.parquet', 'data-bootcamp-jose', 'raw.parquet') ##acces denied
     print('check s3 please UwU')
     #df.to_parquet(bucket_path_raw)   #No module named s3fs
     #client.put_object('raw.parquet','data-bootcamp-jose','raw.parquet')
