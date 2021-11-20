@@ -51,7 +51,7 @@ def read_csv(url,bucket):
     print('check s3 please UwU')
     #df.to_parquet(bucket_path_raw)   #No module named s3fs
     #client.put_object('raw.parquet','data-bootcamp-jose','raw.parquet')
-    response = client.upload_file('raw.parquet', 'data-bootcamp-jose', '/raw.parquet')
+    response = client.upload_file('raw.parquet', 'data-bootcamp-jose', 'raw.parquet')
     #hook.load_file('raw.parquet','/raw.parquet','data-bootcamp-jose')
     return f"csv saved in parquet file in: {bucket_path_raw}"
 
