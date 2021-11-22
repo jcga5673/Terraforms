@@ -91,7 +91,7 @@ JOB_FLOW_OVERRIDES = {
 def send_to_rds():
     pg_hook = PostgresHook(postgre_conn_id = 'postgres_default')
     s3 = S3Hook(aws_conn_id = 'aws_default', verify = None)
-    s3_key = 'result.csv/part-00000-6c40b5bd-9f60-460e-aacb-c4a39f84e6c3-c000.csv'
+    s3_key = '/result.csv/part-00000-6c40b5bd-9f60-460e-aacb-c4a39f84e6c3-c000.csv'
     s3_bucket = 'data-bootcamp-jose'
     print('Dowbnloading s3 file')
     '''
