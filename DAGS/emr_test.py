@@ -12,7 +12,7 @@ from airflow.contrib.sensors.emr_step_sensor import EmrStepSensor
 from airflow.contrib.operators.emr_terminate_job_flow_operator import (
     EmrTerminateJobFlowOperator,
 )
-import boto3
+from airflow.providers.amazon.aws.transfers.s3_to_redshift import S3ToRedshiftOperator
 
 
 # Configurations
@@ -145,6 +145,16 @@ terminate_emr_cluster = EmrTerminateJobFlowOperator(
     job_flow_id="{{ task_instance.xcom_pull(task_ids='create_emr_cluster', key='return_value') }}",
     aws_conn_id="aws_default",
     dag=dag,
+)
+
+task_transfer_s3_to_redshift = S3ToRedshiftOperator(
+    s3_bucket=data-bootcamp-jose,
+    s3_key=result.csv/part-00000-6c40b5bd-9f60-460e-aacb-c4a39f84e6c3-c000.csv,
+    schema="PUBLIC",
+    table=movie_review,
+    copy_options=['csv'],
+    task_id='transfer_s3_to_redshift',
+    dag = dag,
 )
 
 
