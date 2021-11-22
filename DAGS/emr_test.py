@@ -79,11 +79,7 @@ JOB_FLOW_OVERRIDES = {
     "ServiceRole": "EMR_DefaultRole",
 }
 
-def read_files(){
-    client = boto3.client('s3')
-    path = 's3://data-bootcamp-jose/'
 
-}
 
 
 default_args = {

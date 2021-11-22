@@ -4,7 +4,7 @@ from airflow.operators.bash import BashOperator
 
 
 dag_params = {
-    'dag_id': 'PostgresOperator_dag',
+    'dag_id': 'create_movies_table',
     'start_date': datetime(2021, 1, 29),
     'schedule_interval': None
 }
