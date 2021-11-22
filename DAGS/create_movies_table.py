@@ -1,6 +1,7 @@
 from datetime import datetime
 from airflow import DAG
-from airflow.operators.postgres_operator import PostgresOperator
+from airflow.operators.bash import BashOperator
+
 
 dag_params = {
     'dag_id': 'PostgresOperator_dag',
