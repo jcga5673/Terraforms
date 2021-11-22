@@ -1,19 +1,22 @@
 from datetime import datetime
 from airflow import DAG
-from airflow.operators.bash import BashOperator
-
+from airflow.operators.postgres_operator import PostgresOperator
 
 dag_params = {
-    'dag_id': 'create_movies_table',
+    'dag_id': 'PostgresOperator_dag',
     'start_date': datetime(2021, 1, 29),
     'schedule_interval': None
 }
 
 with DAG(**dag_params) as dag:
 
-    this_will_skip = BashOperator(
-    task_id='this_will_skip',
-    bash_command='aws redshift-data execute-statement --database my_database --db-user adminuser --cluster-identifier mycluster --region us-east-2 --sql "CREATE TABLE movie_review (cid int,positive_review int);"',
-    dag=dag,
-    )       
+    create_table = PostgresOperator(
+        task_id='create_table',
+        sql='''CREATE TABLE IF NOT EXISTS movie_review(
+                cid  int,
+                positive_review int'
+            ''',
+        postgres_conn_id= 'conn_postgress',
+        autocommit=True,
+    )
     

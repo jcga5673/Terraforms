@@ -127,7 +127,7 @@ def send_to_rds():
     file = table_path
     with open(file, 'r') as f:
         next(f)
-        curr.copy_from(f, 'pokemon', sep=',')
+        curr.copy_from(f, 'movie_review', sep=',')
         get_postgres_conn.commit()
 
     return "let's keep trying"
