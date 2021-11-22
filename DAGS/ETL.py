@@ -38,7 +38,7 @@ def read_csv(url,bucket):
     ##Download data and send it to s3
     path = 'https://drive.google.com/uc?export=download&id='+url.split('/')[-2]
     df = pd.read_csv(path)
-    bucket_path_raw = bucket + 'raw_data.csv'
+    bucket_path_raw = bucket + 'raw.parquet'
     print(df.head(5))
     print(bucket_path_raw)
     #hook = S3Hook(aws_conn_id='conn_id').get_bucket('data-bootcamp-jose')
@@ -51,6 +51,8 @@ def read_csv(url,bucket):
     s3.load_file(filename = 'raw.parquet',key = 'raw.parquet',bucket_name = 'data-bootcamp-jose')
     #s3.meta.client.upload_file('raw.parquet', 'data-bootcamp-jose', 'raw.parquet') ##acces denied
     print('check s3 please UwU')
+    df = pd.read_parquet(bucket_path_raw)
+    print(df.head(5))
     #df.to_parquet(bucket_path_raw)   #No module named s3fs
     #client.put_object('raw.parquet','data-bootcamp-jose','raw.parquet')
     #response = client.upload_file('raw.parquet', 'data-bootcamp-jose', 'raw.parquet')
