@@ -38,3 +38,5 @@ logs:
     storageClassName: nfs-client
 
 
+volumes:
+  - ./custom_modules:/usr/local/airflow/custom_modules

@@ -67,6 +67,13 @@ class S3ToPostgresTransfer(BaseOperator):
             s3_key_object = self.s3.get_key(self.s3_key, self.s3_bucket)
           
         list_srt_content = s3_key_object.get()['Body'].read().decode(encoding = "utf-8", errors = "ignore")
+
+        schema = {
+                    'cid': 'int',
+                    'positive_review': 'int'
+        }
+
+        '''
         schema = {
                     'producto': 'string',
                     'presentacion': 'string',
@@ -83,7 +90,8 @@ class S3ToPostgresTransfer(BaseOperator):
                     'latitud': 'float64',                  
                     'longitud': 'float64'
                  }  
-        date_cols = ['fechaRegistro']         
+        '''       
+        #date_cols = ['fechaRegistro']         
      
         df_products = pd.read_csv(io.StringIO(list_srt_content), 
                          header=0, 
