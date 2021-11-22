@@ -47,7 +47,10 @@ def read_csv(url,bucket):
     client = boto3.client('s3') 
     #s3_resource = self.get_resource_type('s3')
     #s3 = boto3.resource('s3')
+    ##Solution
+
     s3 = S3Hook(aws_conn_id='conn_id')
+
     s3.load_file(filename = 'raw.parquet',key = 'raw.parquet',bucket_name = 'data-bootcamp-jose')
     #s3.meta.client.upload_file('raw.parquet', 'data-bootcamp-jose', 'raw.parquet') ##acces denied
     print('check s3 please UwU')
@@ -61,7 +64,7 @@ def read_csv(url,bucket):
 
 def clear_data(bucket):
     ##read data from s3 and clean it
-    bucket_path_raw = bucket + 'raw_data.csv'
+    bucket_path_raw = bucket + 'raw.parquet'
     bucket_path_stage = bucket + 'stage_data.csv'
     df = pd.read_parquet('raw.parquet')
     print(df.columns)
@@ -72,6 +75,14 @@ def clear_data(bucket):
         df[column] = df[column].str.replace(r'\W',"")
       
     df.to_parquet('stagin.parquet')
+
+    try:
+        s3 = boto3.resource('s3')
+        s3.Bucket(bucket).download_file('raw.parquet', 'my_localimage.jpg')
+        
+    except Exception as err:
+        print(err,'the error is here')
+
     return f"parquet saved into {bucket_path_stage}"
         
 
