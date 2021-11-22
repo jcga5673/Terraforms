@@ -97,9 +97,9 @@ def send_to_rds():
     print('Dowbnloading s3 file')
     
 
-    if not self.s3.check_for_wildcard_key(self.s3_key, self.s3_bucket):
-        raise AirflowException("No key matches {0}".format(self.s3_key))
-    s3_key_object = self.s3.get_wildcard_key(self.s3_key, self.s3_bucket)
+    if not s3.check_for_wildcard_key(s3_key, s3_bucket):
+        raise AirflowException("No key matches {0}".format(s3_key))
+    s3_key_object = s3.get_wildcard_key(s3_key, s3_bucket)
 
     s3_key_object = s3.get_wildcard_key(s3_key, s3_bucket)
     list_srt_content = s3_key_object.get()['Body'].read().decode(encoding = "utf-8", errors = "ignore")
