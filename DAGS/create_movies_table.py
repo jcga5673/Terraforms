@@ -3,7 +3,7 @@ from airflow import DAG
 from airflow.operators.postgres_operator import PostgresOperator
 
 dag_params = {
-    'dag_id': 'PostgresOperator_dag',
+    'dag_id': 'movie_table',
     'start_date': datetime(2021, 1, 29),
     'schedule_interval': None
 }
