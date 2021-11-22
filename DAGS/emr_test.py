@@ -12,7 +12,15 @@ from airflow.contrib.sensors.emr_step_sensor import EmrStepSensor
 from airflow.contrib.operators.emr_terminate_job_flow_operator import (
     EmrTerminateJobFlowOperator,
 )
-from airflow.providers.amazon.aws.transfers.s3_to_redshift import S3ToRedshiftOperator
+from airflow.hooks.postgres_hook import PostgresHook
+from airflow.hooks.S3_hook import S3Hook
+from airflow.models import BaseOperator
+from airflow.utils.decorators import apply_defaults
+from airflow.exceptions import AirflowException
+import os.path
+import pandas as pd
+import io
+
 
 
 # Configurations
@@ -80,7 +88,27 @@ JOB_FLOW_OVERRIDES = {
 }
 
 
+def send_to_rds():
+    pg_hook = PostgresHook(postgre_conn_id = 'postgres_default')
+    s3 = S3Hook(aws_conn_id = 'aws_default', verify = None)
+    s3_key = 'result.csv/part-00000-6c40b5bd-9f60-460e-aacb-c4a39f84e6c3-c000.csv'
+    s3_bucket = 'data-bootcamp-jose'
+    print('Dowbnloading s3 file')
+    '''
+    if not self.s3.check_for_wildcard_key(self.s3_key, self.s3_bucket):
+        raise AirflowException("No key matches {0}".format(self.s3_key))
+    '''    
+    s3_key_object = s3.get_wildcard_key(s3_key, s3_bucket)
+    list_srt_content = s3_key_object.get()['Body'].read().decode(encoding = "utf-8", errors = "ignore")
+    
+    df = pd.read_csv(io.StringIO(list_srt_content))
+    print(df.head(5))
+    schema = {
+        'cid':  'int',
+        'positive_review': 'int'
+    }
 
+    return "let's keep trying"
 
 default_args = {
     "owner": "airflow",
@@ -147,14 +175,11 @@ terminate_emr_cluster = EmrTerminateJobFlowOperator(
     dag=dag,
 )
 
-task_transfer_s3_to_redshift = S3ToRedshiftOperator(
-    s3_bucket='data-bootcamp-jose',
-    s3_key='result.csv/part-00000-6c40b5bd-9f60-460e-aacb-c4a39f84e6c3-c000.csv',
-    schema="mycluster",
-    table='movie_review',
-    copy_options=['csv'],
-    task_id='transfer_s3_to_redshift',
-    dag = dag,
+task_transfer_s3_to_rds = PythonOperator(
+    task_id = 'send_to_rds',
+    python_callable = send_to_rds,
+    #op_kwargs={},
+    dag = dag
 )
 
 
