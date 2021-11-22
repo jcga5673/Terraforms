@@ -110,6 +110,25 @@ def send_to_rds():
         'cid':  'int',
         'positive_review': 'int'
     }
+    pg_hook = PostgresHook(postgres_conn_id='conn_postgress')
+    get_postgres_conn = PostgresHook(postgres_conn_id='conn_postgress').get_conn()
+    curr = get_postgres_conn.cursor("cursor")
+    # CSV loading to table.
+    df.to_csv('test.csv')
+    table_dir = os.getcwd()
+    # r=root, d=directories, f=files
+    for r, d, f in os.walk(table_dir):
+        for file in f:
+            if file.endswith("test.csv"):
+                table_path = os.path.join(r, file)
+
+    print(table_path)
+
+    file = table_path
+    with open(file, 'r') as f:
+        next(f)
+        curr.copy_from(f, 'pokemon', sep=',')
+        get_postgres_conn.commit()
 
     return "let's keep trying"
 
@@ -184,6 +203,7 @@ task_transfer_s3_to_rds = PythonOperator(
     #op_kwargs={},
     dag = dag
 )
+
 
 
 
