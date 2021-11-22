@@ -148,10 +148,10 @@ terminate_emr_cluster = EmrTerminateJobFlowOperator(
 )
 
 task_transfer_s3_to_redshift = S3ToRedshiftOperator(
-    s3_bucket=data-bootcamp-jose,
-    s3_key=result.csv/part-00000-6c40b5bd-9f60-460e-aacb-c4a39f84e6c3-c000.csv,
+    s3_bucket='data-bootcamp-jose',
+    s3_key='result.csv/part-00000-6c40b5bd-9f60-460e-aacb-c4a39f84e6c3-c000.csv',
     schema="PUBLIC",
-    table=movie_review,
+    table='movie_review',
     copy_options=['csv'],
     task_id='transfer_s3_to_redshift',
     dag = dag,
