@@ -10,13 +10,9 @@ dag_params = {
 
 with DAG(**dag_params) as dag:
 
-    create_table = PostgresOperator(
-        task_id='create_table',
-        sql='''CREATE TABLE IF NOT EXISTS movies_reviews(
-            cid int,
-            positive_review int)
-            ''',
-        postgres_conn_id= 'conn_postgress',
-        autocommit=True,
-    )
+    this_will_skip = BashOperator(
+    task_id='this_will_skip',
+    bash_command='aws redshift-data execute-statement --database my_database --db-user adminuser --cluster-identifier mycluster --region us-east-2 --sql "CREATE TABLE movie_review (cid int,positive_review int);"',
+    dag=dag,
+    )       
     

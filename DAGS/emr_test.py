@@ -12,6 +12,8 @@ from airflow.contrib.sensors.emr_step_sensor import EmrStepSensor
 from airflow.contrib.operators.emr_terminate_job_flow_operator import (
     EmrTerminateJobFlowOperator,
 )
+import boto3
+
 
 # Configurations
 BUCKET_NAME = "data-bootcamp-jose"  # replace this with your bucket name
@@ -75,6 +77,12 @@ JOB_FLOW_OVERRIDES = {
     },
     "JobFlowRole": "EMR_EC2_DefaultRole",
     "ServiceRole": "EMR_DefaultRole",
+}
+
+def read_files(){
+    client = boto3.client('s3')
+    path = 's3://data-bootcamp-jose/'
+
 }
 
 
@@ -142,6 +150,8 @@ terminate_emr_cluster = EmrTerminateJobFlowOperator(
     aws_conn_id="aws_default",
     dag=dag,
 )
+
+
 
 end_data_pipeline = DummyOperator(task_id="end_data_pipeline", dag=dag)
 
