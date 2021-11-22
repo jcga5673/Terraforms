@@ -46,13 +46,15 @@ def read_csv(url,bucket):
     #hook.load_file( ,)
     client = boto3.client('s3') 
     #s3_resource = self.get_resource_type('s3')
-    s3 = boto3.resource('s3')
+    #s3 = boto3.resource('s3')
+    s3 = S3Hook(aws_conn_id='conn_id')
+    s3.load_file(filename = 'raw.parquet',key = '/raw.parquet',bucket_name = 'data-bootcamp-jose')
     #s3.meta.client.upload_file('raw.parquet', 'data-bootcamp-jose', 'raw.parquet') ##acces denied
     print('check s3 please UwU')
     #df.to_parquet(bucket_path_raw)   #No module named s3fs
     #client.put_object('raw.parquet','data-bootcamp-jose','raw.parquet')
     #response = client.upload_file('raw.parquet', 'data-bootcamp-jose', 'raw.parquet')
-    hook.load_file('raw.parquet','/raw.parquet','data-bootcamp-jose')
+    #hook.upload_file('raw.parquet','/raw.parquet','data-bootcamp-jose')
     return f"csv saved in parquet file in: {bucket_path_raw}"
 
 def clear_data(bucket):
