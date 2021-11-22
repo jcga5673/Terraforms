@@ -41,13 +41,13 @@ def read_csv(url,bucket):
     bucket_path_raw = bucket + 'raw_data.csv'
     print(df.head(5))
     print(bucket_path_raw)
-    hook = S3Hook(aws_conn_id='conn_id').get_bucket('data-bootcamp-jose')
+    #hook = S3Hook(aws_conn_id='conn_id').get_bucket('data-bootcamp-jose')
     df.to_parquet('raw.parquet')
     #hook.load_file( ,)
     client = boto3.client('s3') 
     #s3_resource = self.get_resource_type('s3')
     #s3 = boto3.resource('s3')
-    s3 = S3Hook(s3_conn_id='conn_id')
+    s3 = S3Hook(aws_conn_id='conn_id')
     s3.load_file(filename = 'raw.parquet',key = '/raw.parquet',bucket_name = 'data-bootcamp-jose')
     #s3.meta.client.upload_file('raw.parquet', 'data-bootcamp-jose', 'raw.parquet') ##acces denied
     print('check s3 please UwU')
