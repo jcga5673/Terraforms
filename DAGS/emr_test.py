@@ -12,7 +12,7 @@ from airflow.contrib.sensors.emr_step_sensor import EmrStepSensor
 from airflow.contrib.operators.emr_terminate_job_flow_operator import (
     EmrTerminateJobFlowOperator,
 )
-from custom_modules.dag_s3_to_postgres import S3ToPostgresTransfer
+#from custom_modules.dag_s3_to_postgres import S3ToPostgresTransfer
 from airflow.hooks.postgres_hook import PostgresHook
 from airflow.hooks.S3_hook import S3Hook
 from airflow.models import BaseOperator
