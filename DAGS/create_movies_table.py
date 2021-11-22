@@ -14,7 +14,7 @@ with DAG(**dag_params) as dag:
         task_id='create_table',
         sql='''CREATE TABLE IF NOT EXISTS movie_review(
                 cid  int,
-                positive_review int')
+                positive_review int)
             ''',
         postgres_conn_id= 'conn_postgress',
         autocommit=True,
