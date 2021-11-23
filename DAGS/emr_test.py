@@ -124,7 +124,7 @@ def send_to_rds():
                 table_path = os.path.join(r, file)
 
     print(table_path)
-    df = read_csv("test.csv")
+    df = pd.read_csv("test.csv")
     print(df.head(5))
     file = table_path
     with open(file, 'r') as f:
