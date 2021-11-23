@@ -114,7 +114,7 @@ def send_to_rds():
     get_postgres_conn = PostgresHook(postgres_conn_id='conn_postgress').get_conn()
     curr = get_postgres_conn.cursor("cursor")
     # CSV loading to table.
-    df.to_csv('test.csv')
+    df.to_csv('test.csv',index=False)
     table_dir = os.getcwd()
     # r=root, d=directories, f=files
 
@@ -124,8 +124,8 @@ def send_to_rds():
                 table_path = os.path.join(r, file)
 
     print(table_path)
-    df = pd.read_csv("test.csv")
-    print(df.head(5))
+    #df = pd.read_csv("test.csv")
+    #print(df.head(5))
     file = table_path
     with open(file, 'r') as f:
         next(f)
