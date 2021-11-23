@@ -117,13 +117,15 @@ def send_to_rds():
     df.to_csv('test.csv')
     table_dir = os.getcwd()
     # r=root, d=directories, f=files
+
     for r, d, f in os.walk(table_dir):
         for file in f:
             if file.endswith("test.csv"):
                 table_path = os.path.join(r, file)
 
     print(table_path)
-
+    df = read_csv("test.csv")
+    print(df.head(5))
     file = table_path
     with open(file, 'r') as f:
         next(f)
