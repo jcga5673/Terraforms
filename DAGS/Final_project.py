@@ -2,7 +2,6 @@ from datetime import datetime, timedelta
 
 from airflow import DAG
 from airflow.operators.dummy_operator import DummyOperator
-from airflow.hooks.S3_hook import S3Hook
 from airflow.operators.python_operator import PythonOperator
 from airflow.contrib.operators.emr_create_job_flow_operator import (
     EmrCreateJobFlowOperator,
@@ -16,6 +15,7 @@ from airflow.contrib.operators.emr_terminate_job_flow_operator import (
 )
 #from custom_modules.dag_s3_to_postgres import S3ToPostgresTransfer
 from airflow.hooks.S3_hook import S3Hook
+import boto3
 import os.path
 import pandas as pd
 import io
@@ -101,6 +101,17 @@ default_args = {
     "retry_delay": timedelta(minutes=5),
 }
 
+
+def file_name():
+    s3 = boto3.resource('s3')
+    my_bucket = s3.Bucket('data-bootcamp-jose')
+
+    for object_summary in my_bucket.objects.filter(Prefix="final_result/"):
+        print(object_summary.key)  
+
+
+
+
 dag = DAG(
     "final_etl_project",
     default_args=default_args,
@@ -155,6 +166,14 @@ terminate_emr_cluster = EmrTerminateJobFlowOperator(
     dag=dag,
 )
 
+get_file_name = PythonOperator(
+    task_id = 'get_file_name',
+    python_callable = file_name,
+    op_kwargs={},
+    dag = dag,
+)
+
+
 transfer_s3_to_redshift = S3ToRedshiftOperator(
     s3_bucket=BUCKET_NAME,
     s3_key="Data",
@@ -171,4 +190,5 @@ end_data_pipeline = DummyOperator(task_id="end_data_pipeline", dag=dag)
 
 start_data_pipeline >>  create_emr_cluster
 create_emr_cluster >> step_adder >> step_checker >> terminate_emr_cluster
-terminate_emr_cluster  >> transfer_s3_to_redshift >> end_data_pipeline
+terminate_emr_cluster  >> transfer_s3_to_redshift >> get_file_name
+transfer_s3_to_redshift >> end_data_pipeline
