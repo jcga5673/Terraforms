@@ -162,6 +162,7 @@ transfer_s3_to_redshift = S3ToRedshiftOperator(
     table="user_behavior_metric",
     copy_options=['csv'],
     task_id='transfer_s3_to_redshift',
+    dag=dag,
 )
 
 
