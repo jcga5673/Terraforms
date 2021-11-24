@@ -159,7 +159,7 @@ task_transfer_s3_to_redshift = S3ToRedshiftOperator(
     s3_bucket=BUCKET_NAME,
     s3_key="Data",
     schema="PUBLIC",
-    table=" user_behavior_metric"",
+    table="user_behavior_metric",
     copy_options=['csv'],
     task_id='transfer_s3_to_redshift',
 )
