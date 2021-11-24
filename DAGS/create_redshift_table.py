@@ -1,6 +1,6 @@
 from datetime import datetime
 from airflow import DAG
-from airflow.providers.amazon.aws.operators.redshift import RedshiftSQLOperator
+from airflow.operators.postgres_operator import PostgresOperator
 
 
 
@@ -13,7 +13,9 @@ dag_params = {
 
 with DAG(**dag_params) as dag:
 
-    setup__task_create_table = RedshiftSQLOperator(
+    create_table = PostgresOperator(
+        task_id='create_redshift_table',
         sql='CREATE TABLE IF NOT EXISTS user_behavior_metric(costumerid int, amount_spent int,review_score int, review_count int)',
-        task_id='create_table',
+        postgres_conn_id= 'conn_redshift',
+        autocommit=True,
     )
