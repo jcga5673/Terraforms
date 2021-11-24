@@ -7,17 +7,15 @@ from airflow.operators.python_operator import PythonOperator
 from airflow.contrib.operators.emr_create_job_flow_operator import (
     EmrCreateJobFlowOperator,
 )
+from airflow.providers.amazon.aws.transfers.s3_to_redshift import S3ToRedshiftOperator
+
 from airflow.contrib.operators.emr_add_steps_operator import EmrAddStepsOperator
 from airflow.contrib.sensors.emr_step_sensor import EmrStepSensor
 from airflow.contrib.operators.emr_terminate_job_flow_operator import (
     EmrTerminateJobFlowOperator,
 )
 #from custom_modules.dag_s3_to_postgres import S3ToPostgresTransfer
-from airflow.hooks.postgres_hook import PostgresHook
 from airflow.hooks.S3_hook import S3Hook
-from airflow.models import BaseOperator
-from airflow.utils.decorators import apply_defaults
-from airflow.exceptions import AirflowException
 import os.path
 import pandas as pd
 import io
@@ -103,7 +101,7 @@ default_args = {
 }
 
 dag = DAG(
-    "spark_submit_airflow",
+    "final_etl_project",
     default_args=default_args,
     schedule_interval="0 10 * * *",
     max_active_runs=1,
@@ -156,10 +154,14 @@ terminate_emr_cluster = EmrTerminateJobFlowOperator(
     dag=dag,
 )
 
-
-
-
-
+task_transfer_s3_to_redshift = S3ToRedshiftOperator(
+    s3_bucket=BUCKET_NAME,
+    s3_key=S3_KEY,
+    schema="PUBLIC",
+    table=REDSHIFT_TABLE,
+    copy_options=['csv'],
+    task_id='transfer_s3_to_redshift',
+)
 
 end_data_pipeline = DummyOperator(task_id="end_data_pipeline", dag=dag)
 
