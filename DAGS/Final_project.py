@@ -31,6 +31,7 @@ s3_data_user= "Data/user_purchase.csv"
 s3_script = "final_pyspark_code.py"
 s3_clean = "clean_data/"
 
+
 SPARK_STEPS = [    
     {
         "Name": "Classify movie reviews",
@@ -156,9 +157,9 @@ terminate_emr_cluster = EmrTerminateJobFlowOperator(
 
 task_transfer_s3_to_redshift = S3ToRedshiftOperator(
     s3_bucket=BUCKET_NAME,
-    s3_key=S3_KEY,
+    s3_key="Data",
     schema="PUBLIC",
-    table=REDSHIFT_TABLE,
+    table=" user_behavior_metric"",
     copy_options=['csv'],
     task_id='transfer_s3_to_redshift',
 )
