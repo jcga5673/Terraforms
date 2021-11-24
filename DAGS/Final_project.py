@@ -190,5 +190,5 @@ end_data_pipeline = DummyOperator(task_id="end_data_pipeline", dag=dag)
 
 start_data_pipeline >>  create_emr_cluster
 create_emr_cluster >> step_adder >> step_checker >> terminate_emr_cluster
-terminate_emr_cluster  >> transfer_s3_to_redshift >> get_file_name
+terminate_emr_cluster  >> get_file_name >> transfer_s3_to_redshift
 transfer_s3_to_redshift >> end_data_pipeline
