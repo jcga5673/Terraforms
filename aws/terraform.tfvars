@@ -70,3 +70,15 @@ acl = "private"
 
 versioning = true
 
+
+#### redshift variables #### 
+###database_name   = var.database_name already selected ####
+cluster_identifier = "my-cluster"
+node_type = "dc2.large"
+cluster_type = "single-node"
+number_of_nodes = 2
+
+
+master_username = "master_username"
+master_password = "Master_password1"
+skip_final_snapshot = true
