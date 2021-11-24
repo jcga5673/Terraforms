@@ -154,7 +154,7 @@ terminate_emr_cluster = EmrTerminateJobFlowOperator(
     aws_conn_id="aws_default",
     dag=dag,
 )
-
+'''
 task_transfer_s3_to_redshift = S3ToRedshiftOperator(
     s3_bucket=BUCKET_NAME,
     s3_key="Data",
@@ -163,10 +163,11 @@ task_transfer_s3_to_redshift = S3ToRedshiftOperator(
     copy_options=['csv'],
     task_id='transfer_s3_to_redshift',
 )
+'''
 
 end_data_pipeline = DummyOperator(task_id="end_data_pipeline", dag=dag)
 
 
 start_data_pipeline >>  create_emr_cluster
 create_emr_cluster >> step_adder >> step_checker >> terminate_emr_cluster
-terminate_emr_cluster >> task_transfer_s3_to_redshift >> end_data_pipeline
+terminate_emr_cluster  >> end_data_pipeline
