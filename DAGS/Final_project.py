@@ -37,8 +37,8 @@ s3_script = "final_pyspark_copy.py"#final_pyspark_code.py"
 s3_clean = "clean_data/"
 
 
-time_stamp = date.today()#datetime.now()
-time1 = datetime.now()
+#time_stamp = date.today()#datetime.now()
+time_stamp = datetime.now()
 
 
 
