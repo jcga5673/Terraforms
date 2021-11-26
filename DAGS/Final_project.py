@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta,date
 #import datetime
 from airflow import DAG
 from airflow.operators.dummy_operator import DummyOperator
@@ -37,7 +37,7 @@ s3_script = "final_pyspark_copy.py"#final_pyspark_code.py"
 s3_clean = "clean_data/"
 
 
-timestamp = datetime.now()
+timestamp = date.today()#datetime.now()
 
 
 #"spark-submit",
