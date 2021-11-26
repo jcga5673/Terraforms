@@ -40,10 +40,6 @@ s3_clean = "clean_data/"
 timestamp = date.today()#datetime.now()
 
 
-#"spark-submit",
-#"--deploy-mode",
-#"client",
-#"s3://{{ params.BUCKET_NAME }}/{{ params.s3_script }}",
 
 
 SPARK_STEPS = [    
