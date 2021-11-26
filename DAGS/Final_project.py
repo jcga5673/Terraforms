@@ -117,7 +117,7 @@ def list_s3():
         return list_keys[1]
 
 def check(s3_arg):
-
+    
     print(s3_arg)
 
 
@@ -190,7 +190,7 @@ check_code = PythonOperator(
 
 transfer_s3_to_redshift = S3ToRedshiftOperator(
     s3_bucket='data-bootcamp-jose',
-    s3_key="{{ task_instance.xcom_pull(task_ids='list_objects') }}",
+    s3_key="final_result/part-00000-ef674196-463f-44f3-a496-82277a7f5a56-c000.csv",#"{{ task_instance.xcom_pull(task_ids='list_objects') }}",
     schema="public",
     table="user_behavior_metric",
     copy_options=['csv'],
