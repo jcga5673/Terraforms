@@ -116,6 +116,10 @@ def list_s3():
 
         return list_keys[1]
 
+def check(s3_arg):
+
+    print(s3_arg)
+
 
 dag = DAG(
     "final_etl_project",
@@ -177,7 +181,12 @@ list_bucket = PythonOperator(
     dag = dag
     )
 
-
+check_code = PythonOperator(
+    task_id = 'Check',
+    python_callable = list_s3,
+     op_kwargs="{{ task_instance.xcom_pull(task_ids='list_objects', key='return_value') }}",
+    dag = dag
+    )
 
 transfer_s3_to_redshift = S3ToRedshiftOperator(
     s3_bucket='data-bootcamp-jose',
@@ -195,5 +204,5 @@ end_data_pipeline = DummyOperator(task_id="end_data_pipeline", dag=dag)
 
 start_data_pipeline >>  create_emr_cluster
 create_emr_cluster >> step_adder >> step_checker >> terminate_emr_cluster
-terminate_emr_cluster >> list_bucket  >> transfer_s3_to_redshift
+terminate_emr_cluster >> list_bucket >>  check_code >> transfer_s3_to_redshift
 transfer_s3_to_redshift >> end_data_pipeline
