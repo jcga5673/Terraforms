@@ -15,7 +15,7 @@ with DAG(**dag_params) as dag:
 
     create_table = PostgresOperator(
         task_id='create_redshift_table',
-        sql='CREATE TABLE IF NOT EXISTS user_behavior_metric(costumerid int, amount_spent int,review_score int, review_count int,insert_date varchar(20))',
+        sql='CREATE TABLE IF NOT EXISTS user_behavior_metric1(costumerid varchar(50), amount_spent varchar(50),review_score varchar(50), review_count varchar(50),insert_date varchar(50))',
         postgres_conn_id= 'conn_redshift',
         autocommit=True,
     )
