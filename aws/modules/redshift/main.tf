@@ -11,26 +11,31 @@ resource "aws_redshift_cluster" "default" {
   skip_final_snapshot = var.skip_final_snapshot
   publicly_accessible     = var.publicly_accessible
 
-  #cluster_subnet_group_name    = aws_redshift_subnet_group.foo.id
-  #vpc_security_group_ids  = [aws_security_group.allow_tls.id]
+  cluster_subnet_group_name    = aws_redshift_subnet_group.foo.name
+  vpc_security_group_ids  = [aws_security_group.allow_tls.id]
 
-  #tags = {
-  #  Name = "redshift-database"
-  #}
+  tags = {
+    Name = "redshift-database"
+  }
 }
+
+###############This creates another vpc
+#resource "aws_vpc" "main" {
+#  cidr_block = "10.0.0.0/16"
+#}
 
 
 resource "aws_security_group" "allow_tls" {
   name        = "allow_tls"
   description = "Allow TLS inbound traffic"
-  #vpc_id      = var.vpc_id_redshift
+  vpc_id      = var.vpc_id_redshift
 
   ingress {
     description      = "TLS from VPC"
     from_port        = var.db_port_redshift
     to_port          = var.db_port_redshift
     protocol         = "tcp"
-    cidr_blocks      = ["10.0.1.0/24","10.0.2.0/24"]#[aws_vpc.main.cidr_block]
+    cidr_blocks      = ["0.0.0.0/0"]#["10.0.1.0/24","10.0.2.0/24"]#[aws_vpc.main.cidr_block]
   }
 
   egress {
@@ -47,25 +52,27 @@ resource "aws_security_group" "allow_tls" {
 
 
 
-
-resource "aws_vpc" "foo" {
-  cidr_block = "10.0.0.0/16"
-}
+################# This creates another vpc
+#resource "aws_vpc" "foo" {
+#  cidr_block = "0.0.0.0/0"
+#}
 
 resource "aws_subnet" "foo" {
-  cidr_block        = "10.0.1.0/24"
+  cidr_block        = "10.0.3.0/24"
   availability_zone = "us-east-2a"
-  vpc_id            = aws_vpc.foo.id
+  vpc_id            = var.vpc_id_redshift
 
   tags = {
     Name = "tf-dbsubnet-test-1"
   }
 }
 
+
+
 resource "aws_subnet" "bar" {
-  cidr_block        = "10.0.2.0/24"
+  cidr_block        = "10.0.4.0/24"
   availability_zone = "us-east-2b"
-  vpc_id            = aws_vpc.foo.id
+  vpc_id            = var.vpc_id_redshift
 
   tags = {
     Name = "tf-dbsubnet-test-2"

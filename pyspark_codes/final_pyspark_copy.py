@@ -9,7 +9,7 @@ from pyspark.sql.types import DoubleType,LongType
 
 ###timestamp argparse
 parser = argparse.ArgumentParser()
-parser.add_argument("--date", type=str, help="airflow timestamp", default="2021-11-26")
+parser.add_argument("--date", type=str, help="airflow timestamp", default="2021-11-00")
 args = parser.parse_args()
 time = args.date
 
