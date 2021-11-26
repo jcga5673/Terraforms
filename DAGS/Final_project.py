@@ -184,13 +184,13 @@ list_bucket = PythonOperator(
 check_code = PythonOperator(
     task_id = 'Check',
     python_callable = list_s3,
-     op_kwargs="{{ task_instance.xcom_pull(task_ids='list_objects') }}",
+     op_kwargs={'s3_arg':"{{ task_instance.xcom_pull(task_ids='list_objects') }}"},
     dag = dag
     )
 
 transfer_s3_to_redshift = S3ToRedshiftOperator(
     s3_bucket='data-bootcamp-jose',
-    s3_key={'s3_arg':"{{ task_instance.xcom_pull(task_ids='list_objects') }}"},
+    s3_key="{{ task_instance.xcom_pull(task_ids='list_objects') }}",
     schema="public",
     table="user_behavior_metric",
     copy_options=['csv'],
