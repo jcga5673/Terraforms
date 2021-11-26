@@ -190,9 +190,9 @@ check_code = PythonOperator(
 
 transfer_s3_to_redshift = S3ToRedshiftOperator(
     s3_bucket='data-bootcamp-jose',
-    s3_key="final_result/part-00000-ef674196-463f-44f3-a496-82277a7f5a56-c000.csv",#"{{ task_instance.xcom_pull(task_ids='list_objects') }}",
+    s3_key="final_result/",#"{{ task_instance.xcom_pull(task_ids='list_objects') }}",
     schema="public",
-    table="user_behavior_metric",
+    table="part-00000-ef674196-463f-44f3-a496-82277a7f5a56-c000.csv",#"user_behavior_metric",
     copy_options=['csv'],
     task_id='transfer_s3_to_redshift',
     dag=dag,
