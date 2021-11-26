@@ -55,7 +55,7 @@ SPARK_STEPS = [
                 "--deploy-mode",
                 "client",
                 "s3://{{ params.BUCKET_NAME }}/{{ params.s3_script }}",
-                "{{params.time_stamp}}"
+                "--date={{params.time_stamp}}"
             ],
         },
     }

@@ -3,12 +3,15 @@ import pyspark
 from pyspark.sql import SparkSession
 import pyspark.sql.functions as f
 from pyspark.ml.feature import StopWordsRemover, Tokenizer, RegexTokenizer
-from pyspark.sql.functions import concat_ws,expr,col,array_contains,format_number,regexp_replace
+from pyspark.sql.functions import concat_ws,expr,col,array_contains,format_number,regexp_replace,lit
 from pyspark.sql.types import DoubleType,LongType
 
 
 ###timestamp argparse
-
+parser = argparse.ArgumentParser()
+parser.add_argument("--date", type=str, help="airflow timestamp", default="2021-11-26")
+args = parser.parse_args()
+time = args.date
 
 spark = SparkSession.builder.appName('Final_code').getOrCreate()
 
@@ -49,5 +52,10 @@ df_user = df_user.withColumn("amount_spent",df_user.amount_spent.cast(LongType()
 
 df_joined = df_user.join(df_movies,df_movies.cid == df_user.CustomerID).drop('cid')
 df_joined = df_joined.withColumn("CustomerID",df_joined.CustomerID.cast(LongType()))
+
+### Add date
+### x should be the timestamp
+x = time
+df_joined = df_joined.withColumn("insert_date",lit(x))
 
 df_joined.repartition(1).write.format('csv').option('header','true').save('s3a://data-bootcamp-jose/final_result',mode='overwrite')
