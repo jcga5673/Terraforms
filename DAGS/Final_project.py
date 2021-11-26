@@ -178,7 +178,7 @@ terminate_emr_cluster = EmrTerminateJobFlowOperator(
 list_bucket = PythonOperator(
     task_id = 'list_objects',
     python_callable = list_s3,
-    op_kwargs={"bucket":"s3://data-bootcamp-jose/"},
+    #op_kwargs={"bucket":"s3://data-bootcamp-jose/"},
     dag = dag
 
     )
