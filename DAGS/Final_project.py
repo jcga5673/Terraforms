@@ -112,9 +112,9 @@ def list_s3():
 
         hook = S3Hook(aws_conn_id="aws_default", verify=None)
 
-        return hook.list_keys(
-            bucket_name='data-bootcamp-jose',
-            prefix="final_result/")
+        hook.list_keys(bucket_name='data-bootcamp-jose',prefix="final_result/")
+
+        return hook[1]
 
 
 dag = DAG(
@@ -181,8 +181,8 @@ list_bucket = PythonOperator(
 
 transfer_s3_to_redshift = S3ToRedshiftOperator(
     s3_bucket=BUCKET_NAME,
-    s3_key="Data",
-    schema="PUBLIC",
+    s3_key="{{ task_instance.xcom_pull(task_ids='list_objects', key='return_value') }}",
+    schema="public",
     table="user_behavior_metric",
     copy_options=['csv'],
     task_id='transfer_s3_to_redshift',
