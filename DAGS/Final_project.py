@@ -112,7 +112,7 @@ def list_s3():
         hook = S3Hook(aws_conn_id="aws_default", verify=None)
 
         return hook.list_keys(
-            bucket_name='data-bootcamo-jose',
+            bucket_name='data-bootcamp-jose',
             prefix="final_result/")
 
 
