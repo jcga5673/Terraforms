@@ -180,7 +180,7 @@ list_bucket = PythonOperator(
 
 
 transfer_s3_to_redshift = S3ToRedshiftOperator(
-    s3_bucket=BUCKET_NAME,
+    s3_bucket='data-bootcamp-jose',
     s3_key="{{ task_instance.xcom_pull(task_ids='list_objects', key='return_value') }}",
     schema="public",
     table="user_behavior_metric",
