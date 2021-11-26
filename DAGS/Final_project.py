@@ -32,7 +32,7 @@ BUCKET_NAME = "data-bootcamp-jose"  # replace this with your bucket name
 s3_data_movie = "Data/movie_review.csv"
 s3_data_user= "Data/user_purchase.csv"
 #local_script = "./dags/scripts/spark/random_text_classification.py"
-s3_script = "final_pyspark_copy.py#"final_pyspark_code.py"
+s3_script = "final_pyspark_copy.py"#final_pyspark_code.py"
 
 s3_clean = "clean_data/"
 timestamp = datetime.now()
