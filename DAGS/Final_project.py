@@ -14,8 +14,8 @@ from airflow.contrib.operators.emr_terminate_job_flow_operator import (
     EmrTerminateJobFlowOperator,
 )
 from airflow.hooks.S3_hook import S3Hook
-from airflow.models import BaseOperator
-from airflow.utils.decorators import apply_defaults
+#from airflow.models import BaseOperator
+#from airflow.utils.decorators import apply_defaults
 #from airflow.contrib.operators.s3_list_operator import s3_list_operator
 #from custom_modules.dag_s3_to_postgres import S3ToPostgresTransfer
 from airflow.hooks.S3_hook import S3Hook
@@ -56,8 +56,8 @@ SPARK_STEPS = [
                 "spark-submit",
                 "--deploy-mode",
                 "client",
-                "s3://{{ params.BUCKET_NAME }}/{{ params.s3_script }}",
-                "--date={{params.time_stamp}}"
+                "s3://{{ params.BUCKET_NAME }}/{{ params.s3_script }}"
+                #"--date={{params.time_stamp}}"
             ],
         },
     }
