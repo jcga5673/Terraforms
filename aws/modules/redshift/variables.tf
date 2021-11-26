@@ -35,3 +35,21 @@ variable "skip_final_snapshot"{
   description = "If true (default), no snapshot will be made before deleting DB"
   type = bool
 }
+
+variable "vpc_id_redshift" {
+  description = "VPC id"
+}
+
+variable "db_port_redshift" {
+  description = "Database port"
+  type = number
+}
+variable "subnet_redshift" {
+  description = "Private subnet where the rds instance is going to be placed"
+}
+variable "publicly_accessible" {
+  description = "Variable that set the instance to be accessible publicly"
+}
+
+
+

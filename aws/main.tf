@@ -69,6 +69,10 @@ module "rds" {
 module "redshift" {
   source = "./modules/redshift"
 
+  vpc_id_redshift = module.networking.vpc_id
+  subnet_redshift = module.networking.private_subnets_ids
+  
+  #availability_zone = var.availability_zone
   cluster_identifier = var.cluster_identifier
   database_name      = var.database_name
   master_username    = var.master_username
@@ -77,5 +81,6 @@ module "redshift" {
   cluster_type       = var.cluster_type
   number_of_nodes    = var.number_of_nodes
   skip_final_snapshot = var.skip_final_snapshot
-
+  db_port_redshift = var.db_port_redshift
+  publicly_accessible = var.publicly_accessible
 }

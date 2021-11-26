@@ -13,6 +13,7 @@ from airflow.contrib.sensors.emr_step_sensor import EmrStepSensor
 from airflow.contrib.operators.emr_terminate_job_flow_operator import (
     EmrTerminateJobFlowOperator,
 )
+from airflow.contrib.operators.s3_list_operator import s3_list_operator
 #from custom_modules.dag_s3_to_postgres import S3ToPostgresTransfer
 from airflow.hooks.S3_hook import S3Hook
 import boto3
@@ -43,6 +44,7 @@ SPARK_STEPS = [
                 "--deploy-mode",
                 "client",
                 "s3://{{ params.BUCKET_NAME }}/{{ params.s3_script }}",
+                ########"timestamp"
             ],
         },
     }
@@ -102,15 +104,6 @@ default_args = {
 }
 
 
-def file_name():
-    s3 = boto3.resource('s3')
-    my_bucket = s3.Bucket('data-bootcamp-jose')
-
-    for object_summary in my_bucket.objects.filter(Prefix="final_result/"):
-        print(object_summary.key)  
-
-
-
 
 dag = DAG(
     "final_etl_project",
@@ -166,12 +159,14 @@ terminate_emr_cluster = EmrTerminateJobFlowOperator(
     dag=dag,
 )
 
-get_file_name = PythonOperator(
-    task_id = 'get_file_name',
-    python_callable = file_name,
-    op_kwargs={},
-    dag = dag,
-)
+list_bucket = s3_list_operator(
+        task_id='list_files_in_bucket',
+        bucket='ob-air-pre',
+        prefix='data/',
+        delimiter='/',
+        aws_conn_id='aws'
+    )
+
 
 
 transfer_s3_to_redshift = S3ToRedshiftOperator(
@@ -190,5 +185,5 @@ end_data_pipeline = DummyOperator(task_id="end_data_pipeline", dag=dag)
 
 start_data_pipeline >>  create_emr_cluster
 create_emr_cluster >> step_adder >> step_checker >> terminate_emr_cluster
-terminate_emr_cluster  >> get_file_name >> transfer_s3_to_redshift
+terminate_emr_cluster >> list_bucket  >> transfer_s3_to_redshift
 transfer_s3_to_redshift >> end_data_pipeline

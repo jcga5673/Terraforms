@@ -82,3 +82,4 @@ number_of_nodes = 2
 master_username = "master_username"
 master_password = "Master_password1"
 skip_final_snapshot = true
+db_port_redshift = 5439

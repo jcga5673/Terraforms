@@ -175,3 +175,7 @@ variable "skip_final_snapshot"{
   description = "If true (default), no snapshot will be made before deleting DB"
   type = bool
 }
+
+variable "db_port_redshift"{
+    description = "Database port"
+}
