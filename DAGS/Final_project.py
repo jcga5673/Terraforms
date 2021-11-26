@@ -37,8 +37,8 @@ s3_script = "final_pyspark_copy.py"#final_pyspark_code.py"
 s3_clean = "clean_data/"
 
 
-timestamp = date.today()#datetime.now()
-
+time_stamp = date.today()#datetime.now()
+time1 = datetime.now()
 
 
 
@@ -151,7 +151,7 @@ step_adder = EmrAddStepsOperator(
         "s3_data_movie": s3_data_movie,
         "s3_data_user": s3_data_user,
         "s3_script": s3_script,
-        "time_stamp": timestamp
+        "time_stamp": time_stamp
     },
     dag=dag,
 )
