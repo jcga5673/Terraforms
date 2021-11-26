@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-
+#import datetime
 from airflow import DAG
 from airflow.operators.dummy_operator import DummyOperator
 from airflow.operators.python_operator import PythonOperator
@@ -35,7 +35,9 @@ s3_data_user= "Data/user_purchase.csv"
 s3_script = "final_pyspark_copy.py"#final_pyspark_code.py"
 
 s3_clean = "clean_data/"
-timestamp = datetime.now()
+
+
+timestamp = datetime.datetime.now()#datetime.now()
 
 
 #"spark-submit",
