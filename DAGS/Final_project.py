@@ -56,8 +56,8 @@ SPARK_STEPS = [
                 "spark-submit",
                 "--deploy-mode",
                 "client",
-                "s3://{{ params.BUCKET_NAME }}/{{ params.s3_script }}"
-                #"--date={{params.time_stamp}}"
+                "s3://{{ params.BUCKET_NAME }}/{{ params.s3_script }}",
+                "--date={{params.time_stamp}}"
             ],
         },
     }
@@ -156,7 +156,6 @@ step_adder = EmrAddStepsOperator(
         "s3_data_user": s3_data_user,
         "s3_script": s3_script,
         "time_stamp": timestamp
-        #"s3_clean": s3_clean,
     },
     dag=dag,
 )
@@ -184,9 +183,7 @@ terminate_emr_cluster = EmrTerminateJobFlowOperator(
 list_bucket = PythonOperator(
     task_id = 'list_objects',
     python_callable = list_s3,
-    #op_kwargs={"bucket":"s3://data-bootcamp-jose/"},
     dag = dag
-
     )
 
 
