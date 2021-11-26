@@ -32,8 +32,16 @@ BUCKET_NAME = "data-bootcamp-jose"  # replace this with your bucket name
 s3_data_movie = "Data/movie_review.csv"
 s3_data_user= "Data/user_purchase.csv"
 #local_script = "./dags/scripts/spark/random_text_classification.py"
-s3_script = "final_pyspark_code.py"
+s3_script = "final_pyspark_copy.py#"final_pyspark_code.py"
+
 s3_clean = "clean_data/"
+timestamp = datetime.now()
+
+
+#"spark-submit",
+#"--deploy-mode",
+#"client",
+#"s3://{{ params.BUCKET_NAME }}/{{ params.s3_script }}",
 
 
 SPARK_STEPS = [    
@@ -47,7 +55,7 @@ SPARK_STEPS = [
                 "--deploy-mode",
                 "client",
                 "s3://{{ params.BUCKET_NAME }}/{{ params.s3_script }}",
-                ########"timestamp"
+                "{{params.time_stamp}}"
             ],
         },
     }
@@ -116,11 +124,6 @@ def list_s3():
             prefix="final_result/")
 
 
-
-
-
-
-
 dag = DAG(
     "final_etl_project",
     default_args=default_args,
@@ -150,6 +153,7 @@ step_adder = EmrAddStepsOperator(
         "s3_data_movie": s3_data_movie,
         "s3_data_user": s3_data_user,
         "s3_script": s3_script,
+        "time_stamp": timestamp
         #"s3_clean": s3_clean,
     },
     dag=dag,
