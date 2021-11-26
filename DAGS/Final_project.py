@@ -34,7 +34,7 @@ s3_clean = "clean_data/"
 
 #time_stamp = date.today()#datetime.now()
 time_stamp = datetime.now()#'2021-11-06'#datetime.now()
-
+time_stamp = str(time_stamp)
 
 
 SPARK_STEPS = [    
