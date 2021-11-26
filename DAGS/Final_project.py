@@ -13,7 +13,10 @@ from airflow.contrib.sensors.emr_step_sensor import EmrStepSensor
 from airflow.contrib.operators.emr_terminate_job_flow_operator import (
     EmrTerminateJobFlowOperator,
 )
-from airflow.contrib.operators.s3_list_operator import s3_list_operator
+from airflow.hooks.S3_hook import S3Hook
+from airflow.models import BaseOperator
+from airflow.utils.decorators import apply_defaults
+#from airflow.contrib.operators.s3_list_operator import s3_list_operator
 #from custom_modules.dag_s3_to_postgres import S3ToPostgresTransfer
 from airflow.hooks.S3_hook import S3Hook
 import boto3
@@ -104,6 +107,19 @@ default_args = {
 }
 
 
+def list_s3():
+
+        hook = S3Hook(aws_conn_id="aws_default", verify=None)
+
+        return hook.list_keys(
+            bucket_name='data-bootcamo-jose',
+            prefix="final_result/")
+
+
+
+
+
+
 
 dag = DAG(
     "final_etl_project",
@@ -159,12 +175,12 @@ terminate_emr_cluster = EmrTerminateJobFlowOperator(
     dag=dag,
 )
 
-list_bucket = s3_list_operator(
-        task_id='list_files_in_bucket',
-        bucket='ob-air-pre',
-        prefix='data/',
-        delimiter='/',
-        aws_conn_id='aws'
+list_bucket = PythonOperator(
+    task_id = 'list_objects',
+    python_callable = list_s3,
+    op_kwargs={"bucket":"s3://data-bootcamp-jose/"},
+    dag = dag
+
     )
 
 
