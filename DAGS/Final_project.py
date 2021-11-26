@@ -129,7 +129,7 @@ def list_s3():
 dag = DAG(
     "final_etl_project",
     default_args=default_args,
-    schedule_interval="0 10 * * *",
+    schedule_interval=None,
     max_active_runs=1,
 )
 
