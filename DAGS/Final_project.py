@@ -180,14 +180,14 @@ list_bucket = PythonOperator(
     python_callable = list_s3,
     dag = dag
     )
-
+'''
 check_code = PythonOperator(
     task_id = 'Check',
     python_callable = list_s3,
      op_kwargs={'s3_arg':"{{ task_instance.xcom_pull(task_ids='list_objects') }}"},
     dag = dag
     )
-
+'''
 transfer_s3_to_redshift = S3ToRedshiftOperator(
     s3_bucket='data-bootcamp-jose',
     s3_key="{{ task_instance.xcom_pull(task_ids='list_objects') }}",
@@ -204,5 +204,5 @@ end_data_pipeline = DummyOperator(task_id="end_data_pipeline", dag=dag)
 
 start_data_pipeline >>  create_emr_cluster
 create_emr_cluster >> step_adder >> step_checker >> terminate_emr_cluster
-terminate_emr_cluster >> list_bucket >>  check_code >> transfer_s3_to_redshift
+terminate_emr_cluster >> list_bucket  >> transfer_s3_to_redshift
 transfer_s3_to_redshift >> end_data_pipeline
