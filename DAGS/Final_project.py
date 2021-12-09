@@ -98,9 +98,9 @@ default_args = {
 }
 
 
-def list_s3(bucket_name,key) -> str:
+def list_s3(bucket_name,prefix) -> str:
     hook = S3Hook(aws_conn_id="aws_default", verify=None)
-    list_keys = hook.list_keys(bucket_name=bucket_name,prefix=key)
+    list_keys = hook.list_keys(bucket_name=bucket_name,prefix='final_result')
     return list_keys[1]
 
 
