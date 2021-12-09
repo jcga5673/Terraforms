@@ -26,7 +26,7 @@ s3_clean = "clean_data/"
 
 
 # timestamp to register insertion date
-time_stamp = date.today()
+time_stamp = str(date.today())
 
 
 SPARK_STEPS = [    
