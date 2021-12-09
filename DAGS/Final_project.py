@@ -171,9 +171,9 @@ transfer_s3_to_redshift = S3ToRedshiftOperator(
     s3_key="{{ task_instance.xcom_pull(task_ids='list_objects') }}",
     schema="public",
     table="user_behavior_metric",
+    include_header = True,
     copy_options=['csv'],
     task_id='transfer_s3_to_redshift',
-    include_header = True,
     dag=dag,
 )
 
