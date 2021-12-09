@@ -58,4 +58,4 @@ df_joined = df_joined.withColumn("CustomerID",df_joined.CustomerID.cast(LongType
 x = time
 df_joined = df_joined.withColumn("insert_date",lit(x))
 
-df_joined.repartition(1).write.format('csv').option('header','true').save('s3a://data-bootcamp-jose/final_result',mode='overwrite')
+df_joined.repartition(1).write.format('csv').save('s3a://data-bootcamp-jose/final_result',mode='overwrite')
