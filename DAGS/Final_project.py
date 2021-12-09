@@ -124,7 +124,7 @@ create_emr_cluster = EmrCreateJobFlowOperator(
 
 
 run_pyspark_code = EmrAddStepsOperator(
-    task_id="add_steps",
+    task_id="run_pyspark_code",
     job_flow_id="{{ task_instance.xcom_pull(task_ids='create_emr_cluster', key='return_value') }}",
     aws_conn_id="aws_default",
     steps=SPARK_STEPS,
@@ -140,7 +140,7 @@ run_pyspark_code = EmrAddStepsOperator(
 
 
 emr_sensor = EmrStepSensor(
-    task_id="watch_step",
+    task_id="emr_sensor",
     job_flow_id="{{ task_instance.xcom_pull('create_emr_cluster', key='return_value') }}",
     step_id="{{ task_instance.xcom_pull(task_ids='add_steps', key='return_value')["
     + str(0)
@@ -159,7 +159,7 @@ terminate_emr_cluster = EmrTerminateJobFlowOperator(
 
 
 get_s3_objects_names = PythonOperator(
-    task_id = 'list_objects',
+    task_id = 'get_s3_objects_names',
     python_callable = list_s3,
     op_kwargs = {'bucket_name': BUCKET_NAME,'prefix': "final_result/"},
     dag = dag
