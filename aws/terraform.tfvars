@@ -75,7 +75,7 @@ versioning = true
 ###database_name   = var.database_name already selected ####
 cluster_identifier = "my-cluster"
 node_type = "dc2.large"
-cluster_type = "single-node"
+cluster_type = "multi-node"
 number_of_nodes = 2
 
 

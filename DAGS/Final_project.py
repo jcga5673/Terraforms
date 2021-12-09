@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta, date
-#import datetime
 from airflow import DAG
 from airflow.operators.dummy_operator import DummyOperator
 from airflow.operators.python_operator import PythonOperator
@@ -14,27 +13,20 @@ from airflow.contrib.operators.emr_terminate_job_flow_operator import (
     EmrTerminateJobFlowOperator,
 )
 from airflow.hooks.S3_hook import S3Hook
-import boto3
-import os.path
-import pandas as pd
-import io
 
 
 
 # Configurations
-BUCKET_NAME = "data-bootcamp-jose"  # replace this with your bucket name
-#local_data = "./dags/data/movie_review.csv"
+BUCKET_NAME = "data-bootcamp-jose"  
 s3_data_movie = "Data/movie_review.csv"
 s3_data_user= "Data/user_purchase.csv"
-#local_script = "./dags/scripts/spark/random_text_classification.py"
-s3_script = "final_pyspark_copy.py"#final_pyspark_code.py"
-
+bucket_key = "final_result"
+s3_script = "final_pyspark_copy.py"
 s3_clean = "clean_data/"
 
 
-#time_stamp = date.today()#datetime.now()
-time_stamp = date.today()#'2021-11-06'#datetime.now()
-time_stamp = str(time_stamp)
+# timestamp to register insertion date
+time_stamp = date.today()
 
 
 SPARK_STEPS = [    
@@ -96,11 +88,9 @@ JOB_FLOW_OVERRIDES = {
 
 
 default_args = {
-    "owner": "airflow",
-    "depends_on_past": True,
-    "wait_for_downstream": True,
-    "start_date": datetime(2020, 10, 17),
-    "email": ["airflow@airflow.com"],
+    "owner": "José Gallardo",
+    "start_date": datetime(2021, 1, 1),
+    "email": ["jose567345@gmail.com"],
     "email_on_failure": False,
     "email_on_retry": False,
     "retries": 1,
@@ -108,17 +98,10 @@ default_args = {
 }
 
 
-def list_s3():
-
-        hook = S3Hook(aws_conn_id="aws_default", verify=None)
-
-        list_keys = hook.list_keys(bucket_name='data-bootcamp-jose',prefix="final_result/")
-
-        return list_keys[1]
-
-def check(s3_arg):
-    
-    print(s3_arg)
+def list_s3(bucket_name,key) -> str:
+    hook = S3Hook(aws_conn_id="aws_default", verify=None)
+    list_keys = hook.list_keys(bucket_name=bucket_name,prefix=key)
+    return list_keys[1]
 
 
 dag = DAG(
@@ -130,7 +113,7 @@ dag = DAG(
 
 start_data_pipeline = DummyOperator(task_id="start_data_pipeline", dag=dag)
 
-# Create an EMR cluster
+
 create_emr_cluster = EmrCreateJobFlowOperator(
     task_id="create_emr_cluster",
     job_flow_overrides=JOB_FLOW_OVERRIDES,
@@ -139,8 +122,8 @@ create_emr_cluster = EmrCreateJobFlowOperator(
     dag=dag,
 )
 
-# Add your steps to the EMR cluster
-step_adder = EmrAddStepsOperator(
+
+run_pyspark_code = EmrAddStepsOperator(
     task_id="add_steps",
     job_flow_id="{{ task_instance.xcom_pull(task_ids='create_emr_cluster', key='return_value') }}",
     aws_conn_id="aws_default",
@@ -155,19 +138,18 @@ step_adder = EmrAddStepsOperator(
     dag=dag,
 )
 
-last_step = len(SPARK_STEPS) - 1
-# wait for the steps to complete
-step_checker = EmrStepSensor(
+
+emr_sensor = EmrStepSensor(
     task_id="watch_step",
     job_flow_id="{{ task_instance.xcom_pull('create_emr_cluster', key='return_value') }}",
     step_id="{{ task_instance.xcom_pull(task_ids='add_steps', key='return_value')["
-    + str(last_step)
+    + str(0)
     + "] }}",
     aws_conn_id="aws_default",
     dag=dag,
 )
 
-# Terminate the EMR cluster
+
 terminate_emr_cluster = EmrTerminateJobFlowOperator(
     task_id="terminate_emr_cluster",
     job_flow_id="{{ task_instance.xcom_pull(task_ids='create_emr_cluster', key='return_value') }}",
@@ -175,21 +157,17 @@ terminate_emr_cluster = EmrTerminateJobFlowOperator(
     dag=dag,
 )
 
-list_bucket = PythonOperator(
+
+get_s3_objects_names = PythonOperator(
     task_id = 'list_objects',
     python_callable = list_s3,
+    op_kwargs = {'bucket_name': BUCKET_NAME,'prefix': "final_result/"},
     dag = dag
     )
-'''
-check_code = PythonOperator(
-    task_id = 'Check',
-    python_callable = list_s3,
-     op_kwargs={'s3_arg':"{{ task_instance.xcom_pull(task_ids='list_objects') }}"},
-    dag = dag
-    )
-'''
+
+
 transfer_s3_to_redshift = S3ToRedshiftOperator(
-    s3_bucket='data-bootcamp-jose',
+    s3_bucket=BUCKET_NAME,
     s3_key="{{ task_instance.xcom_pull(task_ids='list_objects') }}",
     schema="public",
     table="user_behavior_metric1",
@@ -198,11 +176,11 @@ transfer_s3_to_redshift = S3ToRedshiftOperator(
     dag=dag,
 )
 
-###
+
 end_data_pipeline = DummyOperator(task_id="end_data_pipeline", dag=dag)
 
 
 start_data_pipeline >>  create_emr_cluster
-create_emr_cluster >> step_adder >> step_checker >> terminate_emr_cluster
-terminate_emr_cluster >> list_bucket  >> transfer_s3_to_redshift
+create_emr_cluster >> run_pyspark_code >> emr_sensor >> terminate_emr_cluster
+terminate_emr_cluster >> get_s3_objects_names  >> transfer_s3_to_redshift
 transfer_s3_to_redshift >> end_data_pipeline
