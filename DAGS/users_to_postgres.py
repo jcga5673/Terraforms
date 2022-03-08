@@ -5,6 +5,8 @@ from airflow.operators.python_operator import PythonOperator
 import pandas as pd
 from datetime import datetime
 from airflow.hooks.S3_hook import S3Hook
+from datetime import timedelta
+import psycopg2 as pg
 
 default_args = {
     'owner': 'José Gallardo',
