@@ -21,7 +21,7 @@ default_args = {
     'retry_delay': timedelta(minutes=3),
 }
 
-def csv_to_postgres(bucket_file) -> str:
+def csv_to_postgres(bucket_file):
     hook = S3Hook(aws_conn_id="aws_default", verify=None)
     try:
         conection = pg.connect(
@@ -45,6 +45,8 @@ def csv_to_postgres(bucket_file) -> str:
             print(i)
         except Exception as err:
             print(err,'solve this bro')
+            return 0
+    print('good job')
 
 
 
