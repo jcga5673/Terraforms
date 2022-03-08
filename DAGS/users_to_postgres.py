@@ -21,7 +21,7 @@ default_args = {
     'retry_delay': timedelta(minutes=3),
 }
 
-def csv_to_postgres(bucket_file):
+def csv_to_postgres(bucket_file = "s3://raw-data-dea-jose/user_purchase.csv"):
     hook = S3Hook(aws_conn_id="aws_default", verify=None)
     try:
         conection = pg.connect(
