@@ -45,7 +45,7 @@ def csv_to_postgres(bucket_file) -> str:
 
 
 
-dag = DAG('insert_data_postgres',
+dag = DAG('insert_data_postgres_dea',
           default_args=default_args,
           schedule_interval='@once',
           catchup=False)
