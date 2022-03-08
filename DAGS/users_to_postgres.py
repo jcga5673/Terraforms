@@ -3,6 +3,8 @@ from airflow.providers.postgres.operators.postgres import PostgresOperator
 from airflow.hooks.postgres_hook import PostgresHook
 from airflow.operators.python_operator import PythonOperator
 import pandas as pd
+from datetime import datetime
+from airflow.hooks.S3_hook import S3Hook
 
 default_args = {
     'owner': 'José Gallardo',
