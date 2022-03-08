@@ -21,8 +21,8 @@ default_args = {
     'retry_delay': timedelta(minutes=3),
 }
 
-def csv_to_postgres(bucket_file = "s3://raw-data-dea-jose/user_purchase.csv"):
-    hook = S3Hook(aws_conn_id="aws_default", verify=None)
+def csv_to_postgres(url):
+
     try:
         conection = pg.connect(
             host = "terraform-2022030816290704190000000f.cdzr8sg8du1x.us-east-2.rds.amazonaws.com",
@@ -35,10 +35,11 @@ def csv_to_postgres(bucket_file = "s3://raw-data-dea-jose/user_purchase.csv"):
         print(err,'no conection here brah')
         return 0
 
-    df = pd.read_csv(bucket_file)
+    df = pd.read_csv('https://drive.google.com/uc?export=download&id='+url.split('/')[-2])
     df['CustomerID'] = df['CustomerID'].fillna(10000)
     df['Description'] = df['Description'].fillna('No Description')
     df['CustomerID'] = df['CustomerID'].astype(int)
+    cur = conection.cursor()
     for i, row in df.iterrows():
         try:
             cur.execute("INSERT INTO user_purchase (invoice_number,stock_code, detail,quantity,invoice_date,unit_price,customer_id,country) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)",(row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7]))
@@ -61,7 +62,7 @@ dag = DAG('insert_data_postgres_dea',
 task1 = PythonOperator(task_id='csv_to_s3',
                         provide_context = True,
                         python_callable = csv_to_postgres,
-                        op_kwargs={"s3":"s3://raw-data-dea-jose/user_purchase.csv"},
+                        op_kwargs={"url":"https://drive.google.com/file/d/1ysfUdLi7J8gW6GDA3cOAbr7Zc4ZLhxxD/view?usp=sharing"},
                         dag = dag)
 
 task1
