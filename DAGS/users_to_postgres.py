@@ -7,6 +7,8 @@ from datetime import datetime
 from airflow.hooks.S3_hook import S3Hook
 from datetime import timedelta
 import psycopg2 as pg
+from airflow import DAG
+
 
 default_args = {
     'owner': 'José Gallardo',
