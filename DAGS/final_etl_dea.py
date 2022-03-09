@@ -90,7 +90,7 @@ def csv_to_postgres(url):
 
     try:
         conection = pg.connect(
-            host = "terraform-2022030902342066900000000f.cdzr8sg8du1x.us-east-2.rds.amazonaws.com",
+            host = "terraform-2022030904552009470000000f.cdzr8sg8du1x.us-east-2.rds.amazonaws.com",
             user = "dbuser",
             password = "dbpassword",
             database = "dbname"
