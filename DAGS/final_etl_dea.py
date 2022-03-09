@@ -132,7 +132,7 @@ def list_s3(bucket_name,prefix) -> str:
 
 
 dag = DAG(
-    "final_etl_project",
+    "final_etl_project_dea",
     default_args=default_args,
     schedule_interval=None,
     max_active_runs=1,
