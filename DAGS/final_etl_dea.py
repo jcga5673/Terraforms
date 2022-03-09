@@ -177,7 +177,7 @@ run_pyspark_code = EmrAddStepsOperator(
 emr_sensor = EmrStepSensor(
     task_id="emr_sensor",
     job_flow_id="{{ task_instance.xcom_pull('create_emr_cluster', key='return_value') }}",
-    step_id="{{ task_instance.xcom_pull(task_ids='add_steps', key='return_value')["
+    step_id="{{ task_instance.xcom_pull(task_ids='run_pyspark_code', key='return_value')["
     + str(0)
     + "] }}",
     aws_conn_id="aws_default",
