@@ -86,6 +86,33 @@ JOB_FLOW_OVERRIDES = {
     "ServiceRole": "EMR_DefaultRole",
 }
 
+def csv_to_postgres(url):
+
+    try:
+        conection = pg.connect(
+            host = "terraform-2022030902342066900000000f.cdzr8sg8du1x.us-east-2.rds.amazonaws.com",
+            user = "dbuser",
+            password = "dbpassword",
+            database = "dbname"
+        )
+        print('Conexión exitosa')
+    except Exception as err:
+        print(err,'no conection here brah')
+        return 0
+
+    df = pd.read_csv('https://drive.google.com/uc?export=download&id='+url.split('/')[-2])
+    df['CustomerID'] = df['CustomerID'].fillna(10000)
+    df['Description'] = df['Description'].fillna('No Description')
+    df['CustomerID'] = df['CustomerID'].astype(int)
+    cur = conection.cursor()
+    for i, row in df.iterrows():
+        try:
+            cur.execute("INSERT INTO user_purchase (InvoiceNo,StockCode, Description,Quantity,InvoiceDate,UnitPrice,CustomerID,Country) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)",(row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7]))
+        except Exception as err:
+            print(err,'solve this')
+            return 0
+    print('good job')
+
 
 default_args = {
     "owner": "José Gallardo",
@@ -185,8 +212,8 @@ transfer_s3_to_redshift = S3ToRedshiftOperator(
 
 end_data_pipeline = DummyOperator(task_id="end_data_pipeline", dag=dag)
 
-start_data_pipeline >> send_users_to_postgres
+start_data_pipeline >> send_users_to_postgres >> get_s3_object_names
 start_data_pipeline >>  create_emr_cluster
 create_emr_cluster >> run_pyspark_code >> emr_sensor >> terminate_emr_cluster
-terminate_emr_cluster >> get_s3_objects_names  >> transfer_s3_to_redshift
-transfer_s3_to_redshift >> end_data_pipeline
+terminate_emr_cluster >> end_data_pipeline#>> get_s3_objects_names  >> transfer_s3_to_redshift
+#transfer_s3_to_redshift >> end_data_pipeline
