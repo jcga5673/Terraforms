@@ -212,7 +212,7 @@ transfer_s3_to_redshift = S3ToRedshiftOperator(
 
 end_data_pipeline = DummyOperator(task_id="end_data_pipeline", dag=dag)
 
-start_data_pipeline >> send_users_to_postgres >> get_s3_object_names
+start_data_pipeline >> send_users_to_postgres >> end_data_pipeline#>> get_s3_object_names
 start_data_pipeline >>  create_emr_cluster
 create_emr_cluster >> run_pyspark_code >> emr_sensor >> terminate_emr_cluster
 terminate_emr_cluster >> end_data_pipeline#>> get_s3_objects_names  >> transfer_s3_to_redshift
