@@ -42,7 +42,7 @@ def csv_to_postgres(url):
     cur = conection.cursor()
     for i, row in df.iterrows():
         try:
-            cur.execute("INSERT INTO user_purchase (invoice_number,stock_code, detail,quantity,invoice_date,unit_price,customer_id,country) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)",(row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7]))
+            cur.execute("INSERT INTO user_purchase (InvoiceNo,StockCode, Description,Quantity,InvoiceDate,UnitPrice,CustomerID,Country) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)",(row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7]))
             print(i)
         except Exception as err:
             print(err,'solve this bro')
