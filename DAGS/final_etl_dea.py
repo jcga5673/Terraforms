@@ -18,9 +18,9 @@ from airflow.hooks.S3_hook import S3Hook
 
 # Configurations
 BUCKET_NAME = "wz-de-academy-jose-raw-data-bucket"  
-#s3_data_movie = "Data/movie_review.csv"
-#s3_data_user= "Data/user_purchase.csv"
-#bucket_key = "final_result"
+s3_data_movie = "movie_review.csv"
+s3_data_log= "log_reviews.csv"
+bucket_key = "final_result"
 s3_script = "final_emr_code_dea.py"
 #s3_clean = "clean_data/"
 
@@ -166,6 +166,8 @@ run_pyspark_code = EmrAddStepsOperator(
     params={
         "BUCKET_NAME": BUCKET_NAME,
         "s3_script": s3_script,
+        "s3_data_movie": s3_data_movie,
+        "s3_data_user": s3_data_user,
         "time_stamp": time_stamp
     },
     dag=dag,
