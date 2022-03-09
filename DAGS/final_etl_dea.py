@@ -167,7 +167,7 @@ run_pyspark_code = EmrAddStepsOperator(
         "BUCKET_NAME": BUCKET_NAME,
         "s3_script": s3_script,
         "s3_data_movie": s3_data_movie,
-        "s3_data_user": s3_data_user,
+        "s3_data_log": s3_data_log,
         "time_stamp": time_stamp
     },
     dag=dag,
