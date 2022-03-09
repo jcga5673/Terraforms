@@ -141,7 +141,7 @@ dag = DAG(
 start_data_pipeline = DummyOperator(task_id="start_data_pipeline", dag=dag)
 
 
-send_users_to_postgres = PythonOperator(task_id='csv_to_s3',
+send_users_to_postgres = PythonOperator(task_id='csv_to_postgres',
                         provide_context = True,
                         python_callable = csv_to_postgres,
                         op_kwargs={"url":"https://drive.google.com/file/d/1ysfUdLi7J8gW6GDA3cOAbr7Zc4ZLhxxD/view?usp=sharing"},
@@ -191,7 +191,7 @@ terminate_emr_cluster = EmrTerminateJobFlowOperator(
 )
 
 
-get_s3_objects_names = PythonOperator(
+""" get_s3_objects_names = PythonOperator(
     task_id = 'get_s3_objects_names',
     python_callable = list_s3,
     op_kwargs = {'bucket_name': BUCKET_NAME,'prefix': "final_result/"},
@@ -207,7 +207,7 @@ transfer_s3_to_redshift = S3ToRedshiftOperator(
     copy_options=['csv'],
     task_id='transfer_s3_to_redshift',
     dag=dag,
-)
+) """
 
 
 end_data_pipeline = DummyOperator(task_id="end_data_pipeline", dag=dag)
